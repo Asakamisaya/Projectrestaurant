@@ -4,6 +4,6 @@ from django.contrib import admin
 from .models import Foodmenu
 
 class foofmenuadmin(admin.ModelAdmin):
-    list_display = (' food_id','food_name','description','price')
+    list_display = (' foodid','foodname','description','price')
 # Register your models here.
 admin.site.register(Foodmenu)
