@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap/css/bootstrap.css' %}">
+<style>
+zoomImage{
+
+width:100%;
+height:0;
+padding-bottom: 100%;
+overflow:hidden;
+background-position: center center;
+background-repeat: no-repeat;
+-webkit-background-size:cover;
+-moz-background-size:cover;
+background-size:cover;
+
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Manu admin</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a href="menuadmin">Menu <span class="sr-only">(current)</span></a></li>
+        <li><a href="">Link</a></li>
+          </ul>
+        </li>
+      </ul>
+
+
+</nav>
+
+
+<div class="panel panel-default">
+  <div class="panel-heading">Manu list</div>
+  <div class="panel-body">
+<div class="container-fluid" style="padding: 5%">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+            <label>{{ field.label }}:{{ field }}</label>
+            </div>
+        {% endfor %}
+
+    <input type="submit" value="Save" name="_save" class="btn btn-success">
+
+
+    </form>
+    </div>
+
+</div>
+
+
+<div style="padding: 10px">Food Name :<input type="text"  class="form-control" placeholder="Food Name" aria-describedby="basic-addon1" name="foodname"/></div>
+        <div style="padding: 10px">Price :<input type="number" step="0.01" class="form-control" placeholder="Price" aria-describedby="basic-addon1" name="price"/></div>
+        <div style="padding: 10px">Description :<input type="text" class="form-control" rows="3" placeholder="Description" aria-describedby="basic-addon1" name="description"/></div>
+
+
+<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+<script src="{% static 'plugins/bootstrap/js/bootstrap.js' %}"></script>
+</body>
+</html>
