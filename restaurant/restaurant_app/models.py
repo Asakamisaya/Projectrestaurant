@@ -6,7 +6,8 @@ class Foodmenu(models.Model):
     foodname = models.CharField(verbose_name='Food_Name', max_length=50,default=None)
     description = models.CharField(verbose_name='Description', max_length=255,default=None)
     price = models.DecimalField(verbose_name='Price', max_digits=10, decimal_places=2,default=None)
-    img = models.ImageField(db_column='Img', upload_to='images/',verbose_name = 'food image',default=None)
+    img = models.ImageField(upload_to='images/',verbose_name = 'img',default=None, null=True, blank=True)
+    deleted = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['foodid']

@@ -1,4 +1,5 @@
 import os.path
+from idlelib.rpc import request_queue
 from importlib.resources import files
 from lib2to3.fixes.fix_input import context
 
@@ -34,7 +35,28 @@ def menulist(request):
 class addmenuform(forms.ModelForm):
     class Meta:
         model = Foodmenu
-        fields = "__all__"
+        # fields = "__all__"
+        # exclude = ('foodid',)
+        fields = ['foodname', 'description', 'price', 'img']
+
+    def __init__(self, *args, **kwargs):
+        super(addmenuform, self).__init__(*args, **kwargs)
+        self.fields['img'].required = False
+        for name, field in self.fields.items():
+            field.widget.attrs = {"class": "form-control","placeholder": field.label}
+
+class edititemform(forms.ModelForm):
+    class Meta:
+        model = Foodmenu
+        # fields = "__all__"
+        # exclude = ('foodid',)
+        fields = ['foodname', 'description', 'price', 'img']
+
+    def __init__(self, *args, **kwargs):
+        super(edititemform, self).__init__(*args, **kwargs)
+        #self.fields['img'].required = False
+        for name, field in self.fields.items():
+            field.widget.attrs = {"class": "form-control","placeholder": field.label}
 
 
 def addtomenu(request):
@@ -43,21 +65,27 @@ def addtomenu(request):
         form = addmenuform()
         return render(request, 'addmenu.html', {"form":form})
 
-    if request.method == 'GET':
-       # foodname = request.POST['foodname']
-       # description = request.POST['description']
-       # price =request.POST['price']
-       # img = request.FILES['img']
+    if request.method == 'POST':
 
-        #save = models.Foodmenu(foodname=foodname, description=description, price=price, img=img)
-        #save.save(update_fields=['enable'])
-        #print(save.errors)
-        #return redirect('/')
-
-        form = addmenuform(data=request.POST)
-        print(form.errors)
-        form.save()
-        return redirect('addmenu.html')
+        form = addmenuform(request.POST, request.FILES)
+        if form.is_valid():
+            form.save(commit=True)
+            return redirect('/')
 
     return redirect('/')
 
+def edititem(request,nid):
+
+    itemsid = models.Foodmenu.objects.filter(foodid=nid).first()
+
+    if request.method == 'GET':
+        form = edititemform(instance=itemsid)
+        return render(request, 'edititem.html', {"form": form,"nid": nid})
+
+    if request.method == 'POST':
+        form = edititemform(request.POST,request.FILES, instance=itemsid)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+
+    return redirect('/')

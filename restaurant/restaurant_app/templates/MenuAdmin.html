@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>MenuAdmin</title>
     <link rel="stylesheet" href="{% static 'plugins/bootstrap/css/bootstrap.css' %}">
 <style>
 zoomImage{
@@ -33,7 +33,7 @@ background-size:cover;
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Manu admin</a>
+      <a class="navbar-brand">Menu admin</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -50,7 +50,7 @@ background-size:cover;
 
 <div class="container">
     <div style="margin-bottom:20px">
-        <a class="btn btn-success" href="addmenu">ADD</a>
+        <a class="btn btn-success" href="additem">ADD</a>
     </div>
 
 </div>
@@ -70,6 +70,8 @@ background-size:cover;
         </thead>
         <tbody>
         {% for obj in queryset %}
+            {% if obj.deleted %}
+                {% else %}
           <tr>
             <th scope="row">{{forloop.counter}}</th>
             <td>{{ obj.foodname }}</td>
@@ -82,11 +84,12 @@ background-size:cover;
             </td>
             <td>
              <div class="btn-group" role="group" aria-label="...">
-             <button type="button" class="btn btn-primary"> Edit </button>
+                 <a type="button" class="btn btn-primary" href="edititem/{{ obj.foodid }}/"> Edit </a>
              <button type="button" class="btn btn-danger">Delete</button>
             </div>
             </td>
           </tr>
+            {% endif %}
         {% endfor %}
         </tbody>
       </table>

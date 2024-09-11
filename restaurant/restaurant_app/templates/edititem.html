@@ -53,15 +53,14 @@ background-size:cover;
   <div class="panel-heading">Manu list</div>
   <div class="panel-body">
 <div class="container-fluid" style="padding-right: 60%; padding-left: 5%">
-    <form method="post" action="/additem/" enctype="multipart/form-data">
+    <form method="post" action="/edititem/{{ nid }}/" enctype="multipart/form-data">
         {% csrf_token %}
         {% for field in form %}
             <div class="form-group">
                 <label>{{ field.label }}:</label>
                 {{ field }}
             </div>
-        {% endfor %}
-
+{% endfor %}
     <input type="submit" value="Save" name="_save" class="btn btn-success">
 
 
@@ -72,5 +71,6 @@ background-size:cover;
 
 <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
 <script src="{% static 'plugins/bootstrap/js/bootstrap.js' %}"></script>
+
 </body>
 </html>
