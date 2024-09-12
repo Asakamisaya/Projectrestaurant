@@ -27,7 +27,7 @@ class foodmenuView(viewsets.ModelViewSet):
 
 
 def menulist(request):
-    queryset = models.Foodmenu.objects.all()
+    queryset = models.Foodmenu.objects.filter(deleted=False)
     return render(request,'MenuAdmin.html',{'queryset':queryset})
 
 
@@ -59,6 +59,7 @@ class edititemform(forms.ModelForm):
             field.widget.attrs = {"class": "form-control","placeholder": field.label}
 
 
+
 def addtomenu(request):
 
     if request.method == 'GET':
@@ -88,4 +89,11 @@ def edititem(request,nid):
             form.save()
             return redirect('/')
 
+    return redirect('/')
+
+
+def removeitem(request,nid):
+    form = models.Foodmenu.objects.get(foodid=nid)
+    form.deleted = True
+    form.save()
     return redirect('/')
