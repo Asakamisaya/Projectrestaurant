@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 class Foodcategory(models.Model):
-    catename = models.CharField(verbose_name='Category Name', primary_key=True,max_length=50,default=None)
+    catename = models.CharField(verbose_name='Category', primary_key=True,max_length=50,default=None)
 
     def __str__(self):
         return self.catename
@@ -16,7 +16,7 @@ class Foodmenu(models.Model):
     description = models.CharField(verbose_name='Description', max_length=255,default=None)
     price = models.DecimalField(verbose_name='Price', max_digits=10, decimal_places=2,default=None)
     img = models.ImageField(upload_to='images/',verbose_name = 'img',default=None, null=True, blank=True)
-    catename = models.ForeignKey(to='Foodcategory', on_delete=models.SET_NULL, verbose_name='Category_Name',null=True, blank=True)
+    catename = models.ForeignKey(to='Foodcategory', on_delete=models.SET_NULL, verbose_name='Category Name',null=True, blank=True)
     deleted = models.BooleanField(default=False)
 
 

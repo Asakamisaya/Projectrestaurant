@@ -10,7 +10,7 @@ from django.core.signals import request_started
 from django.db.models import Max
 from django.shortcuts import render, redirect
 from django import forms
-from .models import Foodmenu
+from .models import Foodmenu,Foodcategory
 from .serializers import FoodmenuSerializer
 from restaurant_app import models
 from rest_framework import viewsets, mixins
@@ -20,19 +20,36 @@ from restaurant import settings
 
 # Create your views here.
 
-class foodmenuView(viewsets.ModelViewSet):
-    serializer_class = FoodmenuSerializer
-    def get_queryset(self):
-        return Foodmenu.objects.all()
-
 def ordermenu(request):
     queryset = models.Foodmenu.objects.filter(deleted=False)
-    return render(request,'Ordermenu.html',{'queryset':queryset})
+    grouped_data = {}
+    for item in queryset:
+        catename = item.catename
+        if catename not in grouped_data:
+            grouped_data[catename] = []
+        grouped_data[catename].append(item)
 
+    return render(request, 'Ordermenu.html', {'grouped_data': grouped_data})
+
+#def ordermenu(request):
+   # queryset = models.Foodmenu.objects.filter(deleted=False)
+   # return render(request,'Ordermenu.html',{'queryset':queryset})
 
 def menulist(request):
     queryset = models.Foodmenu.objects.filter(deleted=False)
-    return render(request,'MenuAdmin.html',{'queryset':queryset})
+    grouped_data = {}
+    for item in queryset:
+        catename = item.catename
+        if catename not in grouped_data:
+            grouped_data[catename] = []
+        grouped_data[catename].append(item)
+
+    return render(request, 'MenuAdmin.html', {'grouped_data': grouped_data})
+
+
+#def menulist(request):
+ #   queryset = models.Foodmenu.objects.filter(deleted=False)
+  #  return render(request,'MenuAdmin.html',{'queryset':queryset})
 
 def removeditems(request):
     queryset = models.Foodmenu.objects.filter(deleted=True)
@@ -40,7 +57,10 @@ def removeditems(request):
 
 
 
-
+class addcatagoryform(forms.ModelForm):
+    class Meta:
+        model = Foodcategory
+        fields = ['catename']
 
 class addmenuform(forms.ModelForm):
     class Meta:
@@ -69,6 +89,20 @@ class edititemform(forms.ModelForm):
 
 
 
+def addcatagory(request):
+    if request.method == 'GET':
+        addcatagory = addcatagoryform()
+        return render(request, 'addcatagory.html', {"form":addcatagory})
+
+    if request.method == 'POST':
+
+        addcatagory = addcatagoryform(request.POST,request.FILES)
+        if addcatagory.is_valid():
+            addcatagory.save(commit=True)
+            return redirect('/')
+
+
+
 def addtomenu(request):
 
     if request.method == 'GET':
@@ -77,6 +111,7 @@ def addtomenu(request):
 
     if request.method == 'POST':
 
+        addtomenuform = addmenuform(request.POST,request.FILES)
         if addtomenuform.is_valid():
             addtomenuform.save(commit=True)
             return redirect('/')
@@ -114,5 +149,9 @@ def retrieveitem(request,nid):
 
 def deleteitems(request,nid):
     deleteitems = models.Foodmenu.objects.get(foodid=nid)
+    image_path = os.path.join(settings.MEDIA_ROOT, deleteitems.img.path)
+    if os.path.exists(image_path):
+        os.remove(image_path)
+
     deleteitems.delete()
     return redirect('/removeditems/')
