@@ -59,17 +59,18 @@ background-size:cover;
 
 
 <div class="btn-group btn-group pull-right" style="margin-right: 10%">
+         <a class="btn btn-default" href="addcatagory">Add Catagory</a>
         <a class="btn btn-success" href="additem">Add New</a>
         <a class="btn btn-info" href="removeditems">Removed Items</a>
     </div>
 
-        {% for obj in queryset %}
+        {% for catename, items in grouped_data.items %}
 
 
 
 
             <div class="panel panel-default">
-    <div class="panel-heading">Manu list</div>
+    <div class="panel-heading">{{ catename }}</div>
      <div class="panel-body">
       <table class="table">
 
@@ -84,23 +85,30 @@ background-size:cover;
 
         </thead>
       <tbody>
+
+{% for item in items %}
+
           <tr>
             <th scope="row">{{forloop.counter}}</th>
-            <td>{{ obj.foodname }}</td>
-            <td>{{ obj.description }}</td>
-            <td>{{ obj.price }}</td>
+            <td>{{ item.foodname }}</td>
+            <td>{{ item.description }}</td>
+            <td>{{ item.price }}</td>
             <td>
             <div class="zoomImage">
-                    <img class=img src="/Media/{{ obj.img }}" height="200" width="200" >
+                    <img class=img src="/Media/{{ item.img }}" height="200" width="200" >
             </div>
             </td>
             <td>
              <div class="btn-group" role="group" aria-label="..." >
-                 <a type="button" class="btn btn-info" href="edititem/{{ obj.foodid }}/"> Edit </a>
-             <a type="button" class="btn btn-warning" href="removeitem/{{ obj.foodid }}/" onclick="if(!confirm('Removes item? \n \nYou can retrieve this item from the removed items page.')) { event.preventDefault(); }" >Remove</a>
+                 <a type="button" class="btn btn-info" href="edititem/{{ item.foodid }}/"> Edit </a>
+             <a type="button" class="btn btn-warning" href="removeitem/{{ item.foodid }}/" onclick="if(!confirm('Removes item? \n \nYou can retrieve this item from the removed items page.')) { event.preventDefault(); }" >Remove</a>
             </div>
             </td>
           </tr>
+    {% endfor %}
+
+
+
               </tbody>
       </table>
             </div>

@@ -79,103 +79,48 @@
         <div class="aui-item" id="tab1-con1">
             <div class="left-menu" id="left">
                 <ul>
-                    <li><span>Items</span></li>
+
+                    {% for catename, items in grouped_data.items %}
+                    <li><span>{{ catename }}</span></li>
+                    {% endfor %}
 
                 </ul>
             </div>
             <div class="con">
+        {% for catename, items in grouped_data.items %}
                 <div class="right-con con-active" style="display: none;">
                     <ul>
 
 
- {% for obj in queryset %}
+ {% for item in items %}
 
 
                         <li>
-                            <div class="menu-img"><img src="/Media/{{ obj.img }}"></div>
+                            <div class="menu-img"><img src="/Media/{{ item.img }}"></div>
                             <div class="menu-txt">
-                                <h4 data-icon="00">{{ obj.foodname }}</h4>
-                                <p class="list1">{{ obj.description }}</p>
+                                <h4 data-icon="00">{{ item.foodname }}</h4>
+                                <p class="list1">{{ item.description }}</p>
                                 <p class="list2">
-                                    <b>฿</b><b>{{ obj.price }}</b>
+                                    <b>฿</b><b>{{ item.price }}</b>
                                 </p>
                                 <div class="btn btn-lg" style="margin-right: 10%">
                                     <button class="minus"></button>
                                     <i>0</i>
                                     <button class="add"></button>
-                                    <i class="price">{{ obj.price }}</i>
-                                    <i>{ obj.foodid }}</i>
+                                    <i class="price">{{ item.price }}</i>
+                                    <i>{ item.foodid }}</i>
                                 </div>
                             </div>
                         </li>
+
+{% endfor %}
+                    </ul>
+                </div>
+
 {% endfor %}
 
 
 
-                    </ul>
-                </div>
-                <div class="right-con" style="display: none;">
-                    <ul>
-                        <li>
-                            <div class="menu-img"><img src="image/img.jpg"></div>
-                            <div class="menu-txt">
-                                <h4 data-icon="10">宫保鸡丁</h4>
-                                <p class="list1">月销量：123</p>
-                                <p class="list2">
-                                    <b>￥</b><b>4.00</b>
-                                </p>
-                                <div class="btn">
-                                    <button class="minus"></button>
-                                    <i>0</i>
-                                    <button class="add"></button>
-                                    <i class="price">4.00</i>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="menu-img"><img src="image/img.jpg"></div>
-                            <div class="menu-txt">
-                                <h4 data-icon="11">回锅肉</h4>
-                                <p class="list1">月销量：123</p>
-                                <p class="list2">
-                                    <b>￥</b><b>5.00</b>
-                                </p>
-                                <div class="btn">
-                                    <button class="minus"></button>
-                                    <i>0</i>
-                                    <button class="add"></button>
-                                    <i class="price">5.00</i>
-                                </div>
-                            </div>
-                        </li>
-                        </ul>
-
-                    </div>
-
-
-                     <div class="right-con" style="display: none;">
-                    <ul>
-                        <li>
-                            <div class="menu-img"><img src="image/img.jpg"></div>
-                            <div class="menu-txt">
-                                <h4 data-icon="11">回锅肉23333</h4>
-                                <p class="list1">月销量：123</p>
-                                <p class="list2">
-                                    <b>￥</b><b>5.00</b>
-                                </p>
-                                <div class="btn">
-                                    <button class="minus"></button>
-                                    <i>0</i>
-                                    <button class="add"></button>
-                                    <i class="price">5.00</i>
-                                </div>
-                            </div>
-
-                        </li>
-
-                    </ul>
-                         </div>
-                </div>
             </div>
             <div class="up1"></div>
             <div class="shopcart-list fold-transition">
@@ -193,7 +138,7 @@
                     <span id="cartN" class="nowrap">Total：<span id="totalpriceshow">0</span>Baht</span>
                 </div>
                 <div class="right">
-                    <a id="btnselect" class="xhlbtn disable">Check Out</a>
+                    <a id="btnselect" class="xhlbtn disable">Confirm Order</a>
                 </div>
             </div>
         </div>
