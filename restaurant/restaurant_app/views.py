@@ -25,23 +25,32 @@ class foodmenuView(viewsets.ModelViewSet):
     def get_queryset(self):
         return Foodmenu.objects.all()
 
+def ordermenu(request):
+    queryset = models.Foodmenu.objects.filter(deleted=False)
+    return render(request,'Ordermenu.html',{'queryset':queryset})
+
 
 def menulist(request):
     queryset = models.Foodmenu.objects.filter(deleted=False)
     return render(request,'MenuAdmin.html',{'queryset':queryset})
+
+def removeditems(request):
+    queryset = models.Foodmenu.objects.filter(deleted=True)
+    return render(request,'RecycleBin.html',{'queryset':queryset})
+
+
 
 
 
 class addmenuform(forms.ModelForm):
     class Meta:
         model = Foodmenu
-        # fields = "__all__"
-        # exclude = ('foodid',)
-        fields = ['foodname', 'description', 'price', 'img']
+        fields = ['catename','foodname', 'description', 'price', 'img']
 
     def __init__(self, *args, **kwargs):
         super(addmenuform, self).__init__(*args, **kwargs)
         self.fields['img'].required = False
+        self.fields['catename'].required = False
         for name, field in self.fields.items():
             field.widget.attrs = {"class": "form-control","placeholder": field.label}
 
@@ -50,11 +59,11 @@ class edititemform(forms.ModelForm):
         model = Foodmenu
         # fields = "__all__"
         # exclude = ('foodid',)
-        fields = ['foodname', 'description', 'price', 'img']
+        fields = ['catename','foodname', 'description', 'price', 'img']
 
     def __init__(self, *args, **kwargs):
         super(edititemform, self).__init__(*args, **kwargs)
-        #self.fields['img'].required = False
+        self.fields['catename'].required = False
         for name, field in self.fields.items():
             field.widget.attrs = {"class": "form-control","placeholder": field.label}
 
@@ -63,14 +72,13 @@ class edititemform(forms.ModelForm):
 def addtomenu(request):
 
     if request.method == 'GET':
-        form = addmenuform()
-        return render(request, 'addmenu.html', {"form":form})
+        addtomenuform = addmenuform()
+        return render(request, 'addmenu.html', {"form":addtomenuform})
 
     if request.method == 'POST':
 
-        form = addmenuform(request.POST, request.FILES)
-        if form.is_valid():
-            form.save(commit=True)
+        if addtomenuform.is_valid():
+            addtomenuform.save(commit=True)
             return redirect('/')
 
     return redirect('/')
@@ -80,20 +88,31 @@ def edititem(request,nid):
     itemsid = models.Foodmenu.objects.filter(foodid=nid).first()
 
     if request.method == 'GET':
-        form = edititemform(instance=itemsid)
-        return render(request, 'edititem.html', {"form": form,"nid": nid})
+        edittheitemform = edititemform(instance=itemsid)
+        return render(request, 'edititem.html', {"form": edittheitemform,"nid": nid})
 
     if request.method == 'POST':
-        form = edititemform(request.POST,request.FILES, instance=itemsid)
-        if form.is_valid():
-            form.save()
+        edittheitemform = edititemform(request.POST,request.FILES, instance=itemsid)
+        if edittheitemform.is_valid():
+            edittheitemform.save()
             return redirect('/')
 
     return redirect('/')
 
 
 def removeitem(request,nid):
-    form = models.Foodmenu.objects.get(foodid=nid)
-    form.deleted = True
-    form.save()
+    removeitem = models.Foodmenu.objects.get(foodid=nid)
+    removeitem.deleted = True
+    removeitem.save()
     return redirect('/')
+
+def retrieveitem(request,nid):
+    retrieveitem = models.Foodmenu.objects.get(foodid=nid)
+    retrieveitem.deleted = False
+    retrieveitem.save()
+    return redirect('/removeditems/')
+
+def deleteitems(request,nid):
+    deleteitems = models.Foodmenu.objects.get(foodid=nid)
+    deleteitems.delete()
+    return redirect('/removeditems/')

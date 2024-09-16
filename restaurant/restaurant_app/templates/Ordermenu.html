@@ -1,0 +1,241 @@
+﻿{% load static %}
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Order Menu</title>
+
+    <link rel="stylesheet" type="text/css" href={% static "css/aui.css" %}>
+    <link rel="stylesheet" href={% static "css/classify.css" %}>
+    <style>
+        html, body,footer {
+            height: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        .aui-bar-nav {
+            border: none;
+            background: #f5f5f5;
+        }
+
+        .main {
+            height: calc(100% - 4.5rem);
+        }
+
+        #tab1-con1 {
+            padding-bottom: 3rem;
+        }
+
+        #tab1-con1, #tab1-con2 {
+            height: 100%;
+        }
+
+        .aui-tab {
+            border-bottom: solid 1px #eee;
+            background: #f5f5f5;
+            height: 2.25rem;
+        }
+
+        .aui-tab-item {
+            font-size: .75rem;
+            color: #666;
+            width: 25%;
+        }
+
+            .aui-tab-item.aui-active {
+                border: none;
+                color: #000;
+                position: relative;
+            }
+
+                .aui-tab-item.aui-active:after {
+                    position: absolute;
+                    left: 40%;
+                    width: 20%;
+                    height: 2px;
+                    background: #00ae66;
+                    content: '';
+                    bottom: 0;
+                }
+    </style>
+
+</head>
+<body>
+
+    <header class="aui-bar aui-bar-nav">
+        <a class="aui-pull-left aui-btn">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title">Product</div>
+        <div class="aui-pull-right"></div>
+    </header>
+    <div class="aui-tab" id="tab">
+        <div class="aui-tab-item aui-active">Order</div>
+        <div class="aui-tab-item">##</div>
+    </div>
+    <div class="main">
+        <div class="aui-item" id="tab1-con1">
+            <div class="left-menu" id="left">
+                <ul>
+                    <li><span>Items</span></li>
+
+                </ul>
+            </div>
+            <div class="con">
+                <div class="right-con con-active" style="display: none;">
+                    <ul>
+
+
+ {% for obj in queryset %}
+
+
+                        <li>
+                            <div class="menu-img"><img src="/Media/{{ obj.img }}"></div>
+                            <div class="menu-txt">
+                                <h4 data-icon="00">{{ obj.foodname }}</h4>
+                                <p class="list1">{{ obj.description }}</p>
+                                <p class="list2">
+                                    <b>฿</b><b>{{ obj.price }}</b>
+                                </p>
+                                <div class="btn btn-lg" style="margin-right: 10%">
+                                    <button class="minus"></button>
+                                    <i>0</i>
+                                    <button class="add"></button>
+                                    <i class="price">{{ obj.price }}</i>
+                                    <i>{ obj.foodid }}</i>
+                                </div>
+                            </div>
+                        </li>
+{% endfor %}
+
+
+
+                    </ul>
+                </div>
+                <div class="right-con" style="display: none;">
+                    <ul>
+                        <li>
+                            <div class="menu-img"><img src="image/img.jpg"></div>
+                            <div class="menu-txt">
+                                <h4 data-icon="10">宫保鸡丁</h4>
+                                <p class="list1">月销量：123</p>
+                                <p class="list2">
+                                    <b>￥</b><b>4.00</b>
+                                </p>
+                                <div class="btn">
+                                    <button class="minus"></button>
+                                    <i>0</i>
+                                    <button class="add"></button>
+                                    <i class="price">4.00</i>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="menu-img"><img src="image/img.jpg"></div>
+                            <div class="menu-txt">
+                                <h4 data-icon="11">回锅肉</h4>
+                                <p class="list1">月销量：123</p>
+                                <p class="list2">
+                                    <b>￥</b><b>5.00</b>
+                                </p>
+                                <div class="btn">
+                                    <button class="minus"></button>
+                                    <i>0</i>
+                                    <button class="add"></button>
+                                    <i class="price">5.00</i>
+                                </div>
+                            </div>
+                        </li>
+                        </ul>
+
+                    </div>
+
+
+                     <div class="right-con" style="display: none;">
+                    <ul>
+                        <li>
+                            <div class="menu-img"><img src="image/img.jpg"></div>
+                            <div class="menu-txt">
+                                <h4 data-icon="11">回锅肉23333</h4>
+                                <p class="list1">月销量：123</p>
+                                <p class="list2">
+                                    <b>￥</b><b>5.00</b>
+                                </p>
+                                <div class="btn">
+                                    <button class="minus"></button>
+                                    <i>0</i>
+                                    <button class="add"></button>
+                                    <i class="price">5.00</i>
+                                </div>
+                            </div>
+
+                        </li>
+
+                    </ul>
+                         </div>
+                </div>
+            </div>
+            <div class="up1"></div>
+            <div class="shopcart-list fold-transition">
+                <div class="list-header">
+                    <h1 class="title">Cart</h1>
+                    <span class="empty">Clean All</span>
+                </div>
+                <div class="list-content">
+                    <ul></ul>
+                </div>
+            </div>
+            <div class="footer">
+                <div class="left">
+                    <div class="count_num"><span id="totalcountshow">0</span></div>
+                    <span id="cartN" class="nowrap">Total：<span id="totalpriceshow">0</span>Baht</span>
+                </div>
+                <div class="right">
+                    <a id="btnselect" class="xhlbtn disable">Check Out</a>
+                </div>
+            </div>
+        </div>
+        <div class="aui-item aui-hide" id="tab1-con2">
+            2
+        </div>
+    </div>
+
+    <script type="text/javascript" src="{% static 'script/api.js' %}"></script>
+    <script src="{% static 'script/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'script/add.js' %}"></script>
+    <script type="text/javascript" src="{% static 'script/aui-tab.js' %}"></script>
+    <script type="text/javascript">
+        apiready = function () {
+            api.parseTapmode();
+        }
+        var tab = new auiTab({
+            element: document.getElementById("tab"),
+
+        }, function (ret) {
+            if (ret) {
+                //定义获取对象的所有兄弟节点的函数，
+                function siblings(elm) {
+                    var a = [];
+                    var p = elm.parentNode.children;
+                    for (var i = 0, pl = p.length; i < pl; i++) {
+                        if (p[i] !== elm) a.push(p[i]);
+                    }
+                    return a;
+                }
+                var index = ret.index;
+                var activeC = document.getElementById("tab1-con" + index);
+                activeC.className = "";
+                for (var i = 0; i < siblings(activeC).length; i++) {
+                    siblings(activeC)[i].className = "aui-hide";
+                }
+            }
+        });
+    </script>
+
+
+ 
+</body>
+</html>
+

@@ -22,7 +22,7 @@ from django.views.static import serve
 
 from rest_framework import routers
 router = routers.DefaultRouter()
-from restaurant_app.views import foodmenuView ,menulist ,addtomenu,edititem,removeitem
+from restaurant_app.views import foodmenuView ,ordermenu,menulist ,addtomenu, edititem, removeitem, removeditems, retrieveitem ,deleteitems
 router.register(r'foodmenu', foodmenuView, basename='foodmenu')
 
 
@@ -30,11 +30,17 @@ from restaurant.settings import MEDIA_ROOT
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('Order', ordermenu),
     path('', menulist),
     path('menuadmin/', menulist),
     path('additem/', addtomenu),
     path('edititem/<int:nid>/', edititem),
+    path('removeditems/', removeditems),
     path('removeitem/<int:nid>/', removeitem),
+    path('removeditems/retrieve/<int:nid>/', retrieveitem),
+    path('deleteitems/<int:nid>/', deleteitems),
+
+
 
     url('/', include(router.urls)),
     url(r'^Media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT}),

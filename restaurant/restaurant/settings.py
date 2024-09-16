@@ -151,3 +151,5 @@ CORS_ALLOW_HEADERS = ('*')
 
 MEDIA_URL = "/Media/"
 MEDIA_ROOT = os.path.join(BASE_DIR,"Media")
+
+SECURE_CONTENT_TYPE_NOSNIFF = True

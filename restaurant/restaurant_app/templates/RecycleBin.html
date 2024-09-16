@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MenuAdmin</title>
+    <title>Removed Item</title>
     <link rel="stylesheet" href="{% static 'plugins/bootstrap/css/bootstrap.css' %}">
 
     <script>
@@ -53,37 +53,31 @@ background-size:cover;
         </li>
       </ul>
 
-</div>
+
 </nav>
 
-
-
-<div class="btn-group btn-group pull-right" style="margin-right: 10%">
-        <a class="btn btn-success" href="additem">Add New</a>
-        <a class="btn btn-info" href="removeditems">Removed Items</a>
+<div class="btn-group btn-group-lg" style="margin-bottom:20px;padding-left: 5%;">
+    <div>
+        <a class="btn btn-default" href="/">Back</a>
     </div>
 
-        {% for obj in queryset %}
+</div>
 
+<div class="panel panel-default" style="padding: 5%">
+  <div class="panel-heading">Manu list</div>
+  <div class="panel-body">
 
-
-
-            <div class="panel panel-default">
-    <div class="panel-heading">Manu list</div>
-     <div class="panel-body">
       <table class="table">
-
-            <thead>
+        <thead>
           <tr>
             <th>#</th>
             <th>Food Name</th>
             <th>description</th>
             <th>price</th>
-              <th></th>
           </tr>
-
         </thead>
-      <tbody>
+        <tbody>
+        {% for obj in queryset %}
           <tr>
             <th scope="row">{{forloop.counter}}</th>
             <td>{{ obj.foodname }}</td>
@@ -96,18 +90,19 @@ background-size:cover;
             </td>
             <td>
              <div class="btn-group" role="group" aria-label="..." >
-                 <a type="button" class="btn btn-info" href="edititem/{{ obj.foodid }}/"> Edit </a>
-             <a type="button" class="btn btn-warning" href="removeitem/{{ obj.foodid }}/" onclick="if(!confirm('Removes item? \n \nYou can retrieve this item from the removed items page.')) { event.preventDefault(); }" >Remove</a>
+                 <a type="button" class="btn btn-primary" href="retrieve/{{ obj.foodid }}/"> Retrieve </a>
+             <a type="button" class="btn btn-danger" href="/deleteitems/{{ obj.foodid }}/" onclick="if(!confirm('Are you sure you want to permanently deleted this item? \n \nPlease notice: This action is irreversible and may affect workflow. Please avoid using it during working hours.')) { event.preventDefault(); }" > Delete </a>
             </div>
             </td>
           </tr>
-              </tbody>
-      </table>
-            </div>
-             </div>
-
         {% endfor %}
+        </tbody>
+      </table>
 
+
+
+  </div>
+</div>
 
 
 <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
