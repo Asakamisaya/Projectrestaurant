@@ -15,6 +15,7 @@ $(function () {
         e.text(num); //设置数量
         var parent = $(this).parent();
         var m=parent.parent().children("h4").text(); //当前商品名称
+		var id = $(this).next().next().text()
         var danjia=$(this).next().text(); //获取单价
 	    var a = $("#totalpriceshow").html();  //获取当前所选总价
 	    $("#totalpriceshow").html((a * 1 + danjia * 1).toFixed(2));//计算当前所选总价
@@ -28,7 +29,7 @@ $(function () {
 		//判断购物车里是否有商品，是否有相同规格的商品
 		if($(".list-content ul li").length <= 0){
 			var addtr = '<li class="food">';
-			addtr += '<div><span class="accountName">'+m+'</span></div>';
+			addtr += '<div><span class="accountName" id="' +id+ '"  >'+m+'</span></div>';
 			addtr += '<div><span>฿</span><span class="accountPrice">'+sum+'</span></div>'	;					
 			addtr += '<div class="btn">';
 			addtr += '<button class="ms2" style="display: inline-block;"></button>';
@@ -56,7 +57,7 @@ $(function () {
 		//如果为默认值也就是说里面没有此商品，所以添加此商品。
 		if (flag == false) {
 			var addtr = '<li class="food">';
-			addtr += '<div><span class="accountName">'+m+'</span></div>';
+			addtr += '<div><span class="accountName" id="' +id+ '"  >'+m+'</span></div>';
 			addtr += '<div><span>฿</span><span class="accountPrice">'+sum+'</span></div>'	;					
 			addtr += '<div class="btn">';
 			addtr += '<button class="ms2" style="display: inline-block;"></button><i class="li_acount">'+acount+'</i><button class="ad2"></button><i class="price" style="display: none;">'+price+'</i>';

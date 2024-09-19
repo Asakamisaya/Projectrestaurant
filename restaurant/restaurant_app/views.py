@@ -31,6 +31,17 @@ def ordermenu(request):
 
     return render(request, 'Ordermenu.html', {'grouped_data': grouped_data})
 
+
+def submitorder(request):
+
+    if request.method == 'POST':
+
+        submitorderform = request.POST.get('data')
+        print(submitorderform)
+    return redirect('/Order')
+
+    #return redirect('/')
+
 #def ordermenu(request):
    # queryset = models.Foodmenu.objects.filter(deleted=False)
    # return render(request,'Ordermenu.html',{'queryset':queryset})

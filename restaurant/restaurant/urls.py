@@ -22,7 +22,7 @@ from django.views.static import serve
 
 from rest_framework import routers
 router = routers.DefaultRouter()
-from restaurant_app.views import ordermenu, menulist, addtomenu, addcatagory, edititem, removeitem, removeditems, retrieveitem ,deleteitems
+from restaurant_app.views import ordermenu, menulist, addtomenu, addcatagory, edititem, removeitem, removeditems, retrieveitem ,deleteitems,submitorder
 
 
 
@@ -31,6 +31,7 @@ from restaurant.settings import MEDIA_ROOT
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('Order', ordermenu),
+    path('submitorder/', submitorder),
     path('', menulist),
     path('menuadmin/', menulist),
     path('additem/', addtomenu),

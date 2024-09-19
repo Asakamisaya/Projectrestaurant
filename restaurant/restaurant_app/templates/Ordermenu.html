@@ -127,7 +127,7 @@
                                     <i>0</i>
                                     <button class="add"></button>
                                     <i class="price">{{ item.price }}</i>
-                                    <i>{ item.foodid }}</i>
+                                    <i>{{ item.foodid }}</i>
                                 </div>
                             </div>
                         </li>
@@ -157,7 +157,10 @@
                     <span id="cartN" class="nowrap">Total：<span id="totalpriceshow">0</span>Baht</span>
                 </div>
                 <div class="right">
-                    <a id="btnselect" class="xhlbtn disable">Confirm Order</a>
+                    <form id = "orderform" action="/submitorder/" method="post">
+                        {% csrf_token %}
+                    <a onclick="submitData()" id="btn-select" class="xhlbtn disable" type="submit">Confirm Order</a>
+                        </form>
                 </div>
             </div>
         </div>
@@ -197,6 +200,40 @@
             }
         });
     </script>
+
+    <script>
+function submitData() {
+    const form = document.getElementById('orderform');
+    const listContent = document.querySelector('.list-content');
+    const formData = []; // 创建一个数组存储数据
+
+    listContent.querySelectorAll('li').forEach(item => {
+        const accountNameElement = item.querySelector('.accountName');
+        const accountTextElement = item.querySelector('.li_acount');
+
+        if (accountNameElement && accountTextElement) {
+            const accountId = accountNameElement.id;
+            const accountCount = accountTextElement.textContent.trim();
+            formData.push({
+                accountId: accountId,
+                accountCount: accountCount
+            });
+        }
+    });
+
+    // 将formData转换为JSON字符串
+    const formDataJson = JSON.stringify(formData);
+
+    // 创建一个隐藏的 input 元素，将JSON数据添加到表单中
+    const hiddenInput = document.createElement('input');
+    hiddenInput.type = 'hidden';
+    hiddenInput.name = 'data';
+    hiddenInput.value = formDataJson;
+
+    form.appendChild(hiddenInput);
+    form.submit();
+}
+</script>
 
 
  
