@@ -212,11 +212,11 @@ function submitData() {
         const accountTextElement = item.querySelector('.li_acount');
 
         if (accountNameElement && accountTextElement) {
-            const accountId = accountNameElement.id;
-            const accountCount = accountTextElement.textContent.trim();
+            const Id = accountNameElement.id;
+            const Count = accountTextElement.textContent.trim();
             formData.push({
-                accountId: accountId,
-                accountCount: accountCount
+                Id: Id,
+                Count: Count
             });
         }
     });
