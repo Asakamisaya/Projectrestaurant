@@ -52,7 +52,7 @@ $(function () {
 				}else {
 					flag = false;
 				}
-			})
+			});
 		}
 		//如果为默认值也就是说里面没有此商品，所以添加此商品。
 		if (flag == false) {
@@ -69,8 +69,43 @@ $(function () {
     });
 	
     $(".minus").click(function(){
-        $('.shopcart-list,.up1').show();
-    });
+		var mm = $(this).parent().parent().children("h4").text();  //当前商品名字
+		var am = $(this).next().next().next().text();  //当前商品单价
+		var nm = $(this).next().text()-1;  //当前商品数量
+		var sm = parseFloat($("#totalpriceshow").text());  //总金额
+		var znum=0;
+
+
+
+		if(nm == 0){
+			$(this).hide();
+			$(this).next().hide();
+			$(".list-content ul li").each(function() {
+				if ($(this).find("span.accountName").html() == mm) {
+				$(this).remove();
+				e.css("display","none");
+            	e.prev().css("display","none")}
+
+			})
+
+
+
+		}
+
+		$(".list-content ul li").each(function() {
+			if ($(this).find("span.accountName").html() == mm) {
+				$(this).find(".li_acount").html(nm); //对商品的数量进行重新赋值
+				$(this).find(".accountPrice").html((nm * am).toFixed(2));//对商品的价格进行重新赋值
+			}
+		})
+
+
+			$(this).next().text(nm)
+			$("#totalcountshow").text(parseInt($("#totalcountshow").text())-1);
+			$("#totalpriceshow").text((sm-am).toFixed(2));
+			jss();
+
+	});
 
 	//购物车 - 加
 	$(document).on('click','.ad2',function(){
@@ -124,6 +159,7 @@ $(function () {
 		$("#totalpriceshow").text((s-a).toFixed(2));
 		if(parseFloat($("#totalcountshow").text())==0){
 			$(".shopcart-list").hide();
+			jss();
 		}
 	});
 

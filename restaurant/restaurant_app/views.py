@@ -1,6 +1,9 @@
 import os.path
+import json
+from collections import defaultdict
 from idlelib.rpc import request_queue
 from importlib.resources import files
+from itertools import filterfalse
 from lib2to3.fixes.fix_input import context
 
 from PIL.ImageOps import posterize
@@ -10,17 +13,65 @@ from django.core.signals import request_started
 from django.db.models import Max
 from django.shortcuts import render, redirect
 from django import forms
-from .models import Foodmenu,Foodcategory
+from .models import Foodmenu,Foodcategory,Customerorder
 from .serializers import FoodmenuSerializer
 from restaurant_app import models
 from rest_framework import viewsets, mixins
 
 from restaurant import settings
+from django.utils import timezone
 
 
 # Create your views here.
 
-def ordermenu(request):
+
+
+def kitchen(request):
+    orders = Customerorder.objects.filter(paid=False)
+    orderlist = {}
+    for order in orders:
+        foodname = Foodmenu.objects.get(foodid=order.food)
+        orderlist.setdefault(order.order_id, [])
+        orderlist[order.order_id].append({
+            'table_number': order.table_number,
+            'foodid' : order.food,
+            'foodname': foodname,
+            'quantity': order.quantity,
+            'cancled': order.cancled,
+            'cooking': order.cooking,
+            'finished': order.finished,
+        })
+    #print(orderlist)
+
+    return render(request, 'Kitchen.html', {'orderlist': orderlist})
+
+def cancleitem(request,table_number, foodid,order_id):
+    cancleitem = models.Customerorder.objects.get(table_number=table_number,order_id=order_id,food=foodid, )
+    cancleitem.cancled = True
+    cancleitem.save()
+    return redirect('/kitchen')
+
+def kookingitem(request,table_number, foodid,order_id):
+    kookingitem = models.Customerorder.objects.get(table_number=table_number,order_id=order_id,food=foodid, )
+    kookingitem.cooking = True
+    kookingitem.save()
+    return redirect('/kitchen')
+
+def finishitem(request,table_number, foodid,order_id):
+    finishitem = models.Customerorder.objects.get(table_number=table_number,order_id=order_id,food=foodid, )
+    finishitem.finished = True
+    finishitem.save()
+    return redirect('/kitchen')
+
+
+
+
+
+
+
+
+
+def ordermenu(request,nid):
     queryset = models.Foodmenu.objects.filter(deleted=False)
     grouped_data = {}
     for item in queryset:
@@ -32,19 +83,42 @@ def ordermenu(request):
     return render(request, 'Ordermenu.html', {'grouped_data': grouped_data})
 
 
-def submitorder(request):
+def submitorder(request,nid):
 
     if request.method == 'POST':
 
         submitorderform = request.POST.get('data')
-        print(submitorderform)
-    return redirect('/Order')
+        order = json.loads(submitorderform)
+        lastone = models.Customerorder.objects.filter(table_number=nid,paid = False)
+        maxid = Customerorder.objects.order_by('order_id').last()
 
-    #return redirect('/')
+        if not lastone:
+            if maxid:
+                nextid = int(maxid.order_id) + 1
+            else:
+                nextid = 1
+            for f in order:
+                Customerorder.objects.create(
+                    order_id=str(nextid).zfill(5),
+                    table_number=nid,
+                    food=f['Id'],
+                    order_date=timezone.now(),
+                    quantity=f['Count']
+                )
+        else:
+            nextid = int(maxid.order_id)
+            for f in order:
+                Customerorder.objects.create(
+                    order_id=str(nextid).zfill(5),
+                    table_number=nid,
+                    food=f['Id'],
+                    order_date=timezone.now(),
+                    quantity=f['Count']
+                )
 
-#def ordermenu(request):
-   # queryset = models.Foodmenu.objects.filter(deleted=False)
-   # return render(request,'Ordermenu.html',{'queryset':queryset})
+
+    return redirect(f'/Order/{nid}')
+
 
 def menulist(request):
     queryset = models.Foodmenu.objects.filter(deleted=False)
@@ -58,13 +132,12 @@ def menulist(request):
     return render(request, 'MenuAdmin.html', {'grouped_data': grouped_data})
 
 
-#def menulist(request):
- #   queryset = models.Foodmenu.objects.filter(deleted=False)
-  #  return render(request,'MenuAdmin.html',{'queryset':queryset})
 
 def removeditems(request):
     queryset = models.Foodmenu.objects.filter(deleted=True)
     return render(request,'RecycleBin.html',{'queryset':queryset})
+
+
 
 
 
@@ -88,8 +161,6 @@ class addmenuform(forms.ModelForm):
 class edititemform(forms.ModelForm):
     class Meta:
         model = Foodmenu
-        # fields = "__all__"
-        # exclude = ('foodid',)
         fields = ['catename','foodname', 'description', 'price', 'img']
 
     def __init__(self, *args, **kwargs):
@@ -146,6 +217,19 @@ def edititem(request,nid):
     return redirect('/')
 
 
+
+def soldoutitem(request,nid):
+    removeitem = models.Foodmenu.objects.get(foodid=nid)
+    removeitem.soldout = True
+    removeitem.save()
+    return redirect('/')
+
+def removedsoldout(request,nid):
+    removeitem = models.Foodmenu.objects.get(foodid=nid)
+    removeitem.soldout = False
+    removeitem.save()
+    return redirect('/')
+
 def removeitem(request,nid):
     removeitem = models.Foodmenu.objects.get(foodid=nid)
     removeitem.deleted = True
@@ -166,3 +250,8 @@ def deleteitems(request,nid):
 
     deleteitems.delete()
     return redirect('/removeditems/')
+
+
+
+
+

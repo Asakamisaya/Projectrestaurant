@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Removed Item</title>
+    <title>Removed Items</title>
     <link rel="stylesheet" href="{% static 'plugins/bootstrap/css/bootstrap.css' %}">
 
     <script>
@@ -41,7 +41,7 @@ background-size:cover;
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand">Menu admin</a>
+      <a class="navbar-brand">Menu Manage</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -64,10 +64,11 @@ background-size:cover;
 </div>
 
 <div class="panel panel-default" style="padding: 5%">
-  <div class="panel-heading">Manu list</div>
+  <div class="panel-heading">Unused items list</div>
   <div class="panel-body">
 
       <table class="table">
+
         <thead>
           <tr>
             <th>#</th>
@@ -76,7 +77,10 @@ background-size:cover;
             <th>price</th>
           </tr>
         </thead>
+
+
         <tbody>
+     {% if queryset %}
         {% for obj in queryset %}
           <tr>
             <th scope="row">{{forloop.counter}}</th>
@@ -85,7 +89,7 @@ background-size:cover;
             <td>{{ obj.price }}</td>
             <td>
             <div class="zoomImage">
-                    <img class=img src="/Media/{{ obj.img }}" height="200" width="200" >
+                    <img class=img src="/Media/{{ obj.img }}" height="100" width="100" >
             </div>
             </td>
             <td>
@@ -96,6 +100,13 @@ background-size:cover;
             </td>
           </tr>
         {% endfor %}
+        {% else %}
+        <th scope="row">Empty</th>
+            <td>You can click remove bottom to remove a item from menu page</td>
+            <td> </td><td> </td>
+        <th>
+        {% endif %}
+
         </tbody>
       </table>
 

@@ -256,6 +256,7 @@ width: 0;
 }
 .con .con-active {
 	display: block;
+	height: 80vh;
 	padding-bottom: 70px;
 }
 .right-con li {
@@ -343,17 +344,17 @@ width: 0;
 }
 .right-con li .btn button.add , .btn button.ad{
 	background: url(../image/add.png) no-repeat;
-	background-size: 22px 22px;
+	background-size: 100% 100%;
 }
 .right-con li .btn button.minus , .btn button.ms{
 	background: url(../image/minus.png) no-repeat;
-	background-size: 22px 22px;
+	background-size: 100% 100%;
 	width:22px;
 	height:22px;
 }
 .list-content .btn button.ms2  {
 	background: url(../image/minus.png) no-repeat;
-	background-size: 22px 22px;
+	background-size: 100% 100%;
 	width:22px;
 	height:22px;
 }
@@ -362,7 +363,7 @@ width: 0;
 }
 .list-content .btn button.ad2{
 	background: url(../image/add.png) no-repeat;
-	background-size: 22px 22px;
+	background-size: 100% 100%;
 	overflow: hidden;
     margin-top: -6px;
     vertical-align: middle;
@@ -556,7 +557,8 @@ button:focus {
 	left: 0;
 	bottom: 60px;
 	width: 100%;
-	min-height: 200px;
+	height: 40vh;
+	min-height: 100px;
 	display: none;
 	z-index: 3;
 	background: #fff;
@@ -582,16 +584,17 @@ button:focus {
 }
 .shopcart-list .list-content {
 	padding: 0 10px;
-	overflow: hidden;
+	height: 30vh;
+	overflow-y: scroll;
 	background: #fff;
 }
 .shopcart-list .list-content .food {
 	width: 100%;
-	height: 40px;
+	height: 60px;
 	line-height: 40px;
 }
 .shopcart-list .list-content .food .name {
-	line-height: 24px;
+	line-height: 2rem;
 	font-size: 14px;
 	color: #07111b;
 }
@@ -602,7 +605,7 @@ button:focus {
 	line-height: 24px;
 	font-size: 14px;
 	font-weight: 700;
-	color: #f01414;
+	color: #ffffff;
 }
 .shopcart-list .list-content .food .cartcontrol-wrapper {
 	position: absolute;

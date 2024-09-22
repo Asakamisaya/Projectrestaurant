@@ -41,7 +41,7 @@ background-size:cover;
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand">Menu admin</a>
+      <a class="navbar-brand">Menu Manage</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -53,6 +53,7 @@ background-size:cover;
         </li>
       </ul>
 
+</div>
 </div>
 </nav>
 
@@ -95,11 +96,21 @@ background-size:cover;
             <td>{{ item.price }}</td>
             <td>
             <div class="zoomImage">
-                    <img class=img src="/Media/{{ item.img }}" height="200" width="200" >
+                    <img class=img src="/Media/{{ item.img }}" height="100" width="100" >
             </div>
             </td>
             <td>
              <div class="btn-group" role="group" aria-label="..." >
+
+                 {% if item.soldout is False %}
+                    <a type="button" class="btn btn-default" href="soldoutitem/{{ item.foodid }}/" onclick="if(!confirm('Set to Sold Out?')) { event.preventDefault(); }" >Set Sold out</a>
+
+
+                                    {% else %}
+                           <a type="button" class="btn btn-default" href="removedsoldout/{{ item.foodid }}/" onclick="if(!confirm('Set to Normal?')) { event.preventDefault(); }" >Set Available </a>
+                                {% endif %}
+
+
                  <a type="button" class="btn btn-info" href="edititem/{{ item.foodid }}/"> Edit </a>
              <a type="button" class="btn btn-warning" href="removeitem/{{ item.foodid }}/" onclick="if(!confirm('Removes item? \n \nYou can retrieve this item from the removed items page.')) { event.preventDefault(); }" >Remove</a>
             </div>
@@ -109,10 +120,11 @@ background-size:cover;
 
 
 
-              </tbody>
-      </table>
+                     </tbody>
+                </table>
             </div>
-             </div>
+
+            </div>
 
         {% endfor %}
 
@@ -121,4 +133,5 @@ background-size:cover;
 <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
 <script src="{% static 'plugins/bootstrap/js/bootstrap.js' %}"></script>
 </body>
+
 </html>

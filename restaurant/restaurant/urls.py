@@ -22,7 +22,7 @@ from django.views.static import serve
 
 from rest_framework import routers
 router = routers.DefaultRouter()
-from restaurant_app.views import ordermenu, menulist, addtomenu, addcatagory, edititem, removeitem, removeditems, retrieveitem ,deleteitems,submitorder
+from restaurant_app.views import ordermenu, menulist, addtomenu, addcatagory, edititem, removeitem, removeditems, retrieveitem ,deleteitems,submitorder,soldoutitem,removedsoldout,kitchen,cancleitem,kookingitem,finishitem
 
 
 
@@ -30,8 +30,13 @@ from restaurant.settings import MEDIA_ROOT
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('Order', ordermenu),
-    path('submitorder/', submitorder),
+    path('Order/<int:nid>/', ordermenu),
+    path('Order/<int:nid>/submitorder/', submitorder),
+    path('kitchen/', kitchen),
+    path('cancleitem/<str:table_number>/<str:order_id>/<str:foodid>',cancleitem),
+    path('kookingitem/<str:table_number>/<str:order_id>/<str:foodid>',kookingitem),
+    path('finishitem/<str:table_number>/<str:order_id>/<str:foodid>', finishitem),
+
     path('', menulist),
     path('menuadmin/', menulist),
     path('additem/', addtomenu),
@@ -41,6 +46,8 @@ urlpatterns = [
     path('removeitem/<int:nid>/', removeitem),
     path('removeditems/retrieve/<int:nid>/', retrieveitem),
     path('deleteitems/<int:nid>/', deleteitems),
+    path('soldoutitem/<int:nid>/', soldoutitem),
+    path('removedsoldout/<int:nid>/', removedsoldout),
 
 
 

@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add A Item To Menu</title>
+    <title>Item Edit</title>
     <link rel="stylesheet" href="{% static 'plugins/bootstrap/css/bootstrap.css' %}">
 <style>
 zoomImage{
@@ -33,7 +33,7 @@ background-size:cover;
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand">Menu admin</a>
+      <a class="navbar-brand">Menu Manage</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -50,7 +50,7 @@ background-size:cover;
 
 
 <div class="panel panel-default">
-  <div class="panel-heading">Manu list</div>
+  <div class="panel-heading">Item Edite</div>
   <div class="panel-body">
 <div class="container-fluid" style="padding-right: 60%; padding-left: 5%">
     <form method="post" action="/edititem/{{ nid }}/" enctype="multipart/form-data">

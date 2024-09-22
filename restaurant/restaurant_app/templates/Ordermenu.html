@@ -78,6 +78,7 @@
                     content: '';
                     bottom: 0;
                 }
+
     </style>
 
 </head>
@@ -91,8 +92,7 @@
         <div class="aui-pull-right"></div>
     </header>
     <div class="aui-tab" id="tab">
-        <div class="aui-tab-item aui-active">Order</div>
-        <div class="aui-tab-item">##</div>
+        <div class="aui-tab-item aui-active">Menu</div>
     </div>
     <div class="main">
         <div class="aui-item" id="tab1-con1">
@@ -122,6 +122,11 @@
                                 <p class="list2">
                                     <b>฿</b><b>{{ item.price }}</b>
                                 </p>
+
+                                {% if item.soldout is False %}
+
+
+
                                 <div class="btn btn-lg" style="margin-right: 10%">
                                     <button class="minus"></button>
                                     <i>0</i>
@@ -129,6 +134,14 @@
                                     <i class="price">{{ item.price }}</i>
                                     <i>{{ item.foodid }}</i>
                                 </div>
+
+                                    {% else %}
+                                    <div class="btn btn-lg" style="margin-right: 10%">
+                                    <button class="btn disable">Sold Out</button>
+                                    </div>
+                                {% endif %}
+
+
                             </div>
                         </li>
 
@@ -157,15 +170,17 @@
                     <span id="cartN" class="nowrap">Total：<span id="totalpriceshow">0</span>Baht</span>
                 </div>
                 <div class="right">
-                    <form id = "orderform" action="/submitorder/" method="post">
+                    <form id = "orderform" action="submitorder/" method="post">
                         {% csrf_token %}
-                    <a onclick="submitData()" id="btn-select" class="xhlbtn disable" type="submit">Confirm Order</a>
+                    <a onclick="comfirmsubmit()" id="btn-select" class="xhlbtn disable" type="submit">Confirm Order</a>
                         </form>
                 </div>
             </div>
         </div>
         <div class="aui-item aui-hide" id="tab1-con2">
-            2
+<!– page2 -->
+<!– page2 end -->
+
         </div>
     </div>
 
@@ -173,7 +188,7 @@
     <script src="{% static 'script/jquery.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'script/add.js' %}"></script>
     <script type="text/javascript" src="{% static 'script/aui-tab.js' %}"></script>
-    <script type="text/javascript">
+    <script>
         apiready = function () {
             api.parseTapmode();
         }
@@ -202,18 +217,31 @@
     </script>
 
     <script>
+function comfirmsubmit(){
+    if (confirm('Confirm and submit your orders?')) {
+        submitData(); // 用户点击确定时执行 submitData() 函数
+    } else {
+        event.preventDefault(); // 用户点击取消时阻止默认行为
+    }
+}
 function submitData() {
+
+
+
+
+
+
     const form = document.getElementById('orderform');
     const listContent = document.querySelector('.list-content');
     const formData = []; // 创建一个数组存储数据
 
     listContent.querySelectorAll('li').forEach(item => {
-        const accountNameElement = item.querySelector('.accountName');
-        const accountTextElement = item.querySelector('.li_acount');
+        const orderName = item.querySelector('.accountName');
+        const orderid = item.querySelector('.li_acount');
 
-        if (accountNameElement && accountTextElement) {
-            const Id = accountNameElement.id;
-            const Count = accountTextElement.textContent.trim();
+        if (orderName && orderid) {
+            const Id = orderName.id;
+            const Count = orderid.textContent.trim();
             formData.push({
                 Id: Id,
                 Count: Count
@@ -234,6 +262,8 @@ function submitData() {
     form.submit();
 }
 </script>
+
+
 
 
  

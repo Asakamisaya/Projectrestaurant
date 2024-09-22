@@ -18,6 +18,7 @@ class Foodmenu(models.Model):
     img = models.ImageField(upload_to='images/',verbose_name = 'img',default=None, null=True, blank=True)
     catename = models.ForeignKey(to='Foodcategory', on_delete=models.SET_NULL, verbose_name='Category Name',null=True, blank=True)
     deleted = models.BooleanField(default=False)
+    soldout = models.BooleanField(default=False)
 
 
     class Meta:
@@ -27,12 +28,26 @@ class Foodmenu(models.Model):
         return self.foodname
 
 class Customerorder(models.Model):
-    order_id = models.CharField(db_column='Order_ID', primary_key=True, max_length=5)  # Field name made lowercase.
-    table_number = models.CharField(db_column='Table_Number', max_length=5)  # Field name made lowercase.
-    food = models.ForeignKey(to='Foodmenu',on_delete=models.CASCADE,db_column='Food_ID')  # Field name made lowercase.
-    order_date = models.DateField(db_column='Order_Date')  # Field name made lowercase.
-    quantity = models.IntegerField(db_column='Quantity')
+    logid = models.AutoField(primary_key=True)
+    order_id = models.CharField(verbose_name='Order_ID',max_length=5,default=None)
+    table_number = models.CharField(verbose_name='Table_Number', max_length=5)
+    food = models.CharField(verbose_name='Food_ID', max_length=5)
+    order_date = models.DateField(verbose_name='Order_Date')  # Field name made lowercase.
+    quantity = models.IntegerField(verbose_name='Quantity')
+    cancled =  models.BooleanField(default=False)
+    cooking = models.BooleanField(default=False)
+    finished = models.BooleanField(default=False)
+    paid = models.BooleanField(default=False)
+
+
+
+    class Meta:
+        ordering = ['order_id']
 
 
     def __str__(self):
-        return self.order_id + '  ' + self.table_number+ '  '
+        return self.order_id
+
+
+
+

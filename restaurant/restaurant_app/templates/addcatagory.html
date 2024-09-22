@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add A Item To Menu</title>
+    <title>Add A Category To Menu</title>
     <link rel="stylesheet" href="{% static 'plugins/bootstrap/css/bootstrap.css' %}">
 <style>
 zoomImage{
@@ -33,7 +33,7 @@ background-size:cover;
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand">Menu admin</a>
+      <a class="navbar-brand">Menu Manage</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -44,8 +44,8 @@ background-size:cover;
           </ul>
         </li>
       </ul>
-
-
+        </div>
+  </div>
 </nav>
 
 
@@ -63,7 +63,7 @@ background-size:cover;
         {% endfor %}
 
     <input type="submit" value="Save" name="_save" class="btn btn-success">
-    <a class="btn btn-default" href="/restaurant/restaurant_app/static">Back</a>
+    <a class="btn btn-default" href="/">Back</a>
 
 
     </form>
