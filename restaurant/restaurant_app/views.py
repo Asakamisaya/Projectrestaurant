@@ -13,7 +13,8 @@ from django.core.signals import request_started
 from django.db.models import Max
 from django.shortcuts import render, redirect
 from django import forms
-from .models import Foodmenu,Foodcategory,Customerorder
+from django.http import HttpResponse
+from .models import Foodmenu,Foodcategory,Customerorder,Receipt
 from .serializers import FoodmenuSerializer
 from restaurant_app import models
 from rest_framework import viewsets, mixins
@@ -68,6 +69,75 @@ def finishitem(request,table_number, foodid,order_id):
 
 
 
+def Checkout(request,order_id):
+    maxid = Receipt.objects.order_by('invoice').last()
+    print(maxid)
+    if maxid:
+        nextid = str(int(maxid.invoice)+1).zfill(6)
+    else:
+        nextid = str(1).zfill(6)
+    if request.method == 'POST':
+        method = request.POST.get('option')
+        orders = Customerorder.objects.filter(order_id=order_id)
+        total = 0
+        for items in orders:
+            if items.cancled == False:
+                p = Foodmenu.objects.get(foodid=items.food).price
+                total = total + int(items.quantity) * float(p)
+            items.paid = True
+            items.save()
+
+        Receipt.objects.create(
+            invoice=str(nextid).zfill(5),
+            order=order_id,
+            payment_method=method,
+            recept_date=timezone.now(),
+            payment_amout=total
+        )
+
+        return HttpResponse("""
+                        <script>
+                            alert('Successful !');
+                            window.location.href = '/kitchen';
+                        </script>
+                    """)
+
+    if Customerorder.objects.filter(order_id=order_id, cancled=False):
+        orderlist = Customerorder.objects.filter(order_id=order_id)
+        checklist = {}
+        for order in orderlist:
+            foodname = Foodmenu.objects.get(foodid=order.food)
+            price =  Foodmenu.objects.get(foodid=order.food).price
+            subtotal =  int(order.quantity) * float(price)
+            subtotal = f"{subtotal:.2f}"
+            checklist.setdefault(order.order_id, [])
+            checklist[order.order_id].append({
+                'InvoiceID':nextid,
+                'table_number': order.table_number,
+                'foodid' : order.food,
+                'foodname': foodname,
+                'quantity': order.quantity,
+                'price' : price,
+                'subtotal': subtotal,
+                'cancled': order.cancled,
+                'cooking': order.cooking,
+                'finished': order.finished,
+            })
+        #print(checklist)
+
+        return render(request,'Checkout.html',{'checklist': checklist})
+
+    else:
+        orders = Customerorder.objects.filter(order_id=order_id)
+        for items in orders:
+            items.paid = True
+            items.save()
+        return HttpResponse("""
+                        <script>
+                            alert('There are no items to checkout, the order will be deleted !');
+                            window.location.href = '/kitchen';
+                        </script>
+                    """)
 
 
 
@@ -92,7 +162,7 @@ def submitorder(request,nid):
         lastone = models.Customerorder.objects.filter(table_number=nid,paid = False)
         maxid = Customerorder.objects.order_by('order_id').last()
 
-        if not lastone:
+        if lastone:
             if maxid:
                 nextid = int(maxid.order_id) + 1
             else:
