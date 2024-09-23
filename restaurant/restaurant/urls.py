@@ -33,9 +33,9 @@ urlpatterns = [
     path('Order/<int:nid>/', ordermenu),
     path('Order/<int:nid>/submitorder/', submitorder),
     path('kitchen/', kitchen),
-    path('cancleitem/<str:table_number>/<str:order_id>/<str:foodid>',cancleitem),
-    path('kookingitem/<str:table_number>/<str:order_id>/<str:foodid>',kookingitem),
-    path('finishitem/<str:table_number>/<str:order_id>/<str:foodid>', finishitem),
+    path('cancleitem/<str:table_number>/<str:order_id>/<str:logid>',cancleitem),
+    path('kookingitem/<str:table_number>/<str:order_id>/<str:logid>',kookingitem),
+    path('finishitem/<str:table_number>/<str:order_id>/<str:logid>', finishitem),
 
     path('checkout/<str:order_id>/', Checkout),
 

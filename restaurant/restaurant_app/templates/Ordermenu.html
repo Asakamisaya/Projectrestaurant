@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Order Menu</title>
 
-    <link rel="stylesheet" type="text/css" href={% static "css/aui.css" %}>
+    <link rel="stylesheet" href={% static "css/aui.css" %}>
     <link rel="stylesheet" href={% static "css/classify.css" %}>
     <style>
         html, body {
@@ -74,10 +74,35 @@
                     left: 40%;
                     width: 20%;
                     height: 4px;
-                    background: #00ae66;
+                    background: #ff7300;
                     content: '';
                     bottom: 0;
                 }
+
+
+                .search-container {
+                  position: relative;
+                }
+
+                .clear-btn {
+                  all: unset;
+                  border: none;
+                  background-position: center;
+                  background: url({% static '/image/cross.png'%}) no-repeat;
+                  background-size: 100% 100%;
+                  position: absolute;
+                  top: 15px;
+                  right: 260px;
+                  cursor: pointer;
+                  display: none;
+                  width: 25px;
+                  height: 25px;
+                }
+
+                .search-input:not(:placeholder-shown) + .clear-btn {
+                  display: block;
+                }
+
 
     </style>
 
@@ -88,16 +113,27 @@
         <a class="aui-pull-left aui-btn">
             <span class="aui-iconfont aui-icon-left"></span>
         </a>
-        <div class="aui-title">Product</div>
+        <div class="aui-title">Wellcome, Your table No. is <span id="table-number"></span></div>
+
         <div class="aui-pull-right"></div>
+
     </header>
+    <header class="aui-bar aui-bar-nav" >  </header>
+
     <div class="aui-tab" id="tab">
         <div class="aui-tab-item aui-active">Menu</div>
+
     </div>
+
+
     <div class="main">
+
         <div class="aui-item" id="tab1-con1">
+
             <div class="left-menu" id="left">
+
                 <ul>
+
 
                     {% for catename, items in grouped_data.items %}
                     <li><span>{{ catename }}</span></li>
@@ -105,11 +141,19 @@
 
                 </ul>
             </div>
+
             <div class="con">
         {% for catename, items in grouped_data.items %}
                 <div class="right-con con-active" style="display: none;">
                     <ul>
 
+ <li>
+     <div class="search-container">
+    <input type="text" class="search-input" placeholder="Search Menu Items..." style="width: 100%; padding: 5px; padding-left: 50px">
+     <button class="clear-btn aui-pull-left "></button>
+         <div>
+
+                        </li>
 
  {% for item in items %}
 
@@ -117,7 +161,7 @@
                         <li>
                             <div class="menu-img"><img src="/Media/{{ item.img }}"></div>
                             <div class="menu-txt">
-                                <h4 data-icon="00">{{ item.foodname }}</h4>
+                                <h4 data-icon="{{ item.foodid }}">{{ item.foodname }}</h4>
                                 <p class="list1">{{ item.description }}</p>
                                 <p class="list2">
                                     <b>฿</b><b>{{ item.price }}</b>
@@ -153,6 +197,9 @@
 
 
 
+
+
+
             </div>
             <div class="up1"></div>
             <div class="shopcart-list fold-transition">
@@ -183,11 +230,10 @@
 
         </div>
     </div>
-
-    <script type="text/javascript" src="{% static 'script/api.js' %}"></script>
+    <script src="{% static 'script/api.js' %}"></script>
     <script src="{% static 'script/jquery.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'script/add.js' %}"></script>
-    <script type="text/javascript" src="{% static 'script/aui-tab.js' %}"></script>
+    <script src="{% static 'script/add.js' %}"></script>
+    <script src="{% static 'script/aui-tab.js' %}"></script>
     <script>
         apiready = function () {
             api.parseTapmode();
@@ -197,7 +243,6 @@
 
         }, function (ret) {
             if (ret) {
-                //定义获取对象的所有兄弟节点的函数，
                 function siblings(elm) {
                     var a = [];
                     var p = elm.parentNode.children;
@@ -218,12 +263,20 @@
 
     <script>
 function comfirmsubmit(){
+      const btn = document.getElementById('btn-select');
+  if (btn.classList.contains('disable')) {
+    event.preventDefault();
+    return false;
+  }
+  else{
+
     if (confirm('Confirm and submit your orders?')) {
-        submitData(); // 用户点击确定时执行 submitData() 函数
+        submitData();
     } else {
-        event.preventDefault(); // 用户点击取消时阻止默认行为
+        event.preventDefault();
     }
 }
+  }
 function submitData() {
 
 
@@ -249,10 +302,8 @@ function submitData() {
         }
     });
 
-    // 将formData转换为JSON字符串
     const formDataJson = JSON.stringify(formData);
 
-    // 创建一个隐藏的 input 元素，将JSON数据添加到表单中
     const hiddenInput = document.createElement('input');
     hiddenInput.type = 'hidden';
     hiddenInput.name = 'data';
@@ -261,6 +312,51 @@ function submitData() {
     form.appendChild(hiddenInput);
     form.submit();
 }
+</script>
+
+<script>
+      const currentUrl = window.location.href;
+
+  const nid = currentUrl.split('/').filter(part => part).pop();
+
+  document.getElementById('table-number').textContent = nid;
+
+</script>
+
+    <script>
+        const searchInput = document.querySelector('.search-input');
+        const clearBtn = document.querySelector('.clear-btn');
+
+        clearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+            });
+
+
+
+  document.addEventListener('DOMContentLoaded', function () {
+    // Select all search inputs
+    const searchInputs = document.querySelectorAll('.search-input');
+
+    // Add event listeners to each search input
+    searchInputs.forEach(function (searchInput) {
+        searchInput.addEventListener('keyup', function () {
+            const filter = searchInput.value.toLowerCase();
+            // Find the closest list containing this search input
+            const menuItems = searchInput.closest('.right-con').querySelectorAll('.menu-txt');
+
+            menuItems.forEach(function (item) {
+                const itemName = item.querySelector('h4').textContent.toLowerCase();
+                const listItem = item.closest('li');
+
+                if (itemName.includes(filter)) {
+                    listItem.style.display = '';
+                } else {
+                    listItem.style.display = 'none';
+                }
+            });
+        });
+    });
+});
 </script>
 
 

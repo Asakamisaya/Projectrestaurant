@@ -241,9 +241,9 @@ width: 0;
 	border-left: 2px solid #f2f2f2;
 }
 .left-menu ul li.active {
-	color: #00ae66 !important;
+	color: #ff7300 !important;
     background-color: #fff;
-    border-left: 2px solid #00ae66;
+    border-left: 2px solid #ff7300;
 }
 .right-con {
 	display: none;
@@ -426,7 +426,7 @@ width: 0;
 .footer .xhlbtn {
 	display: block;
 	text-align: center;
-	background-color: #00ae66;
+	background-color: #ff7300;
 	width:100%;
 	color: #fff;
 	font-size:16px;
@@ -480,7 +480,7 @@ button:focus {
 	line-height: 50px;
 	width: 100%;
 	bottom: 0;
-	background: #00ae66;
+	background: #ff7300;
 	color: #ffffff;
 	font-size: 16px;
 	text-align: center;

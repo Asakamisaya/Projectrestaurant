@@ -1,10 +1,4 @@
-/*
- * =========================================================================
- * APIClud - AUI UI 框架    流浪男  QQ：343757327  http://www.auicss.com
- * Verson 2.1
- * =========================================================================
- */
- /*初始化类*/
+
 @charset "UTF-8";
 html{
 	font-family: "Helvetica Neue", Helvetica, sans-serif;
@@ -1562,7 +1556,7 @@ input[type="search"]::-webkit-search-cancel-button {
     vertical-align: middle;
 }
 .aui-bar-tab .aui-active {
-	color: #00ae66;
+	color: #ff7300;
 }
 .aui-bar-tab .aui-bar-tab-item .aui-iconfont {
 	position: relative;

@@ -7,11 +7,11 @@
     <link rel="stylesheet" href="{% static 'plugins/bootstrap/css/bootstrap.css' %}">
 <style>
         .table-tile {
-            width: 100%; /* 设置宽度 */
-            height: 500px; /* 设置高度 */
-            overflow: hidden; /* 隐藏溢出内容 */
-            border: 1px solid #ddd; /* 边框 */
-            margin-bottom: 20px; /* 磁贴之间的间距 */
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
             display: flex;
             flex-direction: column;
         }
@@ -50,8 +50,9 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li><a href="#">Link <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">Link</a></li>
+        <li><a href="/">Menu Manage <span class="sr-only">(current)</span></a></li>
+        <li><a href="/kitchen/">Kitchen</a></li>
+          <li><a href="Statistics/">Statistics</a></li>
           </ul>
         </div>
 
@@ -68,7 +69,7 @@
 
        {% for order_id, items in orderlist.items %}
 
-        <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="col-lg-4 col-md-6 col-sm-6">
             <div class="table-tile">
                 <div class="panel-heading">Table No. {{ items.0.table_number }}</div>
                 <div class="panel-heading">Order No. {{ order_id }}</div>
@@ -98,16 +99,16 @@
                                                      {% if item.finished %}
                                 <a class="btn btn-success col-md-6 dynamic-font">Finished</a>
                                 {% else %}
-                                <a class="btn btn-warning col-md-6" href="/finishitem/{{ item.table_number }}/{{ order_id }}/{{ item.foodid }}">Kooking</a>
+                                <a class="btn btn-warning col-md-6" href="/finishitem/{{ item.table_number }}/{{ order_id }}/{{ item.logid }}" >Kooking</a>
                                 {% endif %}
                                 {% else %}
 
-                                    <a class="btn btn-default col-md-6" href="/kookingitem/{{ item.table_number }}/{{ order_id }}/{{ item.foodid }}">Start</a>
+                                    <a class="btn btn-default col-md-6" href="/kookingitem/{{ item.table_number }}/{{ order_id }}/{{ item.logid }}">Start</a>
                                 {% endif %}
                                 {% endif %}
 
                                 {% if not item.cancled %}
-                                    <a class="btn btn-default col-md-6" href="/cancleitem/{{ item.table_number }}/{{ order_id }}/{{ item.foodid }}">Cancel</a>
+                                    <a class="btn btn-default col-md-6" href="/cancleitem/{{ item.table_number }}/{{ order_id }}/{{ item.logid }} "onclick="if(!confirm('Cancel Order?')) { event.preventDefault(); }">Cancel</a>
                                     {% else %}
                                     <a class="btn btn-danger col-md-6">Cancled</a>
                                     {% endif %}
@@ -145,6 +146,13 @@
 
 
 <!-- 添加更多行 -->
+<script>
+  function refreshPage() {
+    location.reload();
+  }
+
+  setInterval(refreshPage, 10000);
+</script>
 <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
 <script src="{% static 'plugins/bootstrap/js/bootstrap.js' %}"></script>
 </body>

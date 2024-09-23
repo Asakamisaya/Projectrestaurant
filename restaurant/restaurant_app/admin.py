@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Foodmenu,Customerorder,Foodcategory,Receipt
+from .models import Foodmenu,Customerorder,Foodcategory,Receipt,Foodcategory
 
 class foofmenuadmin(admin.ModelAdmin):
     list_display = (' foodid','foodname','description','price')
@@ -14,6 +14,7 @@ class Foodcategoryadmin(admin.ModelAdmin):
 
 class Receiptadmin(admin.ModelAdmin):
     list_display = ('receipt_id', 'invoice', 'order', 'payment_method' ,'payment_amout' ,'recept_date')
+
 # Register your models here.
 admin.site.register(Foodmenu)
 admin.site.register(Customerorder)

@@ -41,25 +41,26 @@ def kitchen(request):
             'cancled': order.cancled,
             'cooking': order.cooking,
             'finished': order.finished,
+            'logid': order.logid,
         })
     #print(orderlist)
 
     return render(request, 'Kitchen.html', {'orderlist': orderlist})
 
-def cancleitem(request,table_number, foodid,order_id):
-    cancleitem = models.Customerorder.objects.get(table_number=table_number,order_id=order_id,food=foodid, )
+def cancleitem(request,table_number,logid,order_id):
+    cancleitem = models.Customerorder.objects.get(table_number=table_number,order_id=order_id,logid=logid)
     cancleitem.cancled = True
     cancleitem.save()
     return redirect('/kitchen')
 
-def kookingitem(request,table_number, foodid,order_id):
-    kookingitem = models.Customerorder.objects.get(table_number=table_number,order_id=order_id,food=foodid, )
+def kookingitem(request,table_number, logid,order_id):
+    kookingitem = models.Customerorder.objects.get(table_number=table_number,order_id=order_id,logid=logid)
     kookingitem.cooking = True
     kookingitem.save()
     return redirect('/kitchen')
 
-def finishitem(request,table_number, foodid,order_id):
-    finishitem = models.Customerorder.objects.get(table_number=table_number,order_id=order_id,food=foodid, )
+def finishitem(request,table_number, logid,order_id):
+    finishitem = models.Customerorder.objects.get(table_number=table_number,order_id=order_id,logid=logid)
     finishitem.finished = True
     finishitem.save()
     return redirect('/kitchen')
@@ -162,7 +163,7 @@ def submitorder(request,nid):
         lastone = models.Customerorder.objects.filter(table_number=nid,paid = False)
         maxid = Customerorder.objects.order_by('order_id').last()
 
-        if lastone:
+        if lastone is None:
             if maxid:
                 nextid = int(maxid.order_id) + 1
             else:
@@ -176,7 +177,11 @@ def submitorder(request,nid):
                     quantity=f['Count']
                 )
         else:
-            nextid = int(maxid.order_id)
+            if maxid is None:
+                nextid = 1
+            else:
+                nextid = int(maxid.order_id)
+
             for f in order:
                 Customerorder.objects.create(
                     order_id=str(nextid).zfill(5),
@@ -225,6 +230,7 @@ class addmenuform(forms.ModelForm):
         super(addmenuform, self).__init__(*args, **kwargs)
         self.fields['img'].required = False
         self.fields['catename'].required = False
+        self.fields['description'].required = False
         for name, field in self.fields.items():
             field.widget.attrs = {"class": "form-control","placeholder": field.label}
 
@@ -236,6 +242,7 @@ class edititemform(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(edititemform, self).__init__(*args, **kwargs)
         self.fields['catename'].required = False
+        self.fields['description'].required = False
         for name, field in self.fields.items():
             field.widget.attrs = {"class": "form-control","placeholder": field.label}
 
