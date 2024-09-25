@@ -156,18 +156,22 @@ def ordermenu(request,nid):
 
 def submitorder(request,nid):
 
-    if request.method == 'POST':
+    if request.method == 'GET':
 
+        return redirect(f'/Order/{nid}')
+
+    if request.method == 'POST':
         submitorderform = request.POST.get('data')
         order = json.loads(submitorderform)
         lastone = models.Customerorder.objects.filter(table_number=nid,paid = False)
-        maxid = Customerorder.objects.order_by('order_id').last()
+        maxid = models.Customerorder.objects.last()
+        print(maxid)
+        if maxid:
+            nextid = int(maxid.order_id) + 1
+        else:
+            nextid = 1
 
-        if lastone is None:
-            if maxid:
-                nextid = int(maxid.order_id) + 1
-            else:
-                nextid = 1
+        if not lastone:
             for f in order:
                 Customerorder.objects.create(
                     order_id=str(nextid).zfill(5),
@@ -177,14 +181,10 @@ def submitorder(request,nid):
                     quantity=f['Count']
                 )
         else:
-            if maxid is None:
-                nextid = 1
-            else:
-                nextid = int(maxid.order_id)
 
             for f in order:
                 Customerorder.objects.create(
-                    order_id=str(nextid).zfill(5),
+                    order_id=str(lastone.last().order_id).zfill(5),
                     table_number=nid,
                     food=f['Id'],
                     order_date=timezone.now(),
@@ -192,7 +192,7 @@ def submitorder(request,nid):
                 )
 
 
-    return redirect(f'/Order/{nid}')
+        return redirect(f'/Order/{nid}')
 
 
 def menulist(request):
