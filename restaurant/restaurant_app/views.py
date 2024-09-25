@@ -1,5 +1,6 @@
 import os.path
 import json
+from calendar import month
 from collections import defaultdict
 from idlelib.rpc import request_queue
 from importlib.resources import files
@@ -23,6 +24,7 @@ from .serializers import FoodmenuSerializer
 from restaurant_app import models
 from rest_framework import viewsets, mixins
 
+from dateutil.relativedelta import relativedelta
 from restaurant import settings
 from django.db.models import Sum
 from datetime import timedelta
@@ -210,10 +212,12 @@ def Checkout(request,order_id):
         method = request.POST.get('option')
         orders = Customerorder.objects.filter(order_id=order_id)
         total = 0
+
         for items in orders:
             if items.cancled == False:
                 p = Foodmenu.objects.get(foodid=items.food).price
-                total = total + int(items.quantity) * float(p)
+                subtotal = p*int(items.quantity)
+                total = total + subtotal
             items.paid = True
             items.save()
 
@@ -281,10 +285,11 @@ def pullReceipt(request,receipt_id):
     checklist = {}
     total = 0
     for item in items:
+        subtotal = 0
         price = item.price
         subtotal = int(item.quantity) * float(price)
         subtotal = f"{subtotal:.2f}"
-        if item.cancled == True:
+        if item.cancled == False:
             total = float(total) + float(subtotal)
             total = f"{total:.2f}"
             checklist.setdefault(item.order_id, [])
@@ -368,7 +373,7 @@ def menulist(request):
     queryset = models.Foodmenu.objects.filter(deleted=False)
     grouped_data = {}
     for item in queryset:
-        catename = item.catename
+        catename = item.catename.catename if item.catename else 'Uncategorized'
         if catename not in grouped_data:
             grouped_data[catename] = []
         grouped_data[catename].append(item)
@@ -658,3 +663,178 @@ def statistics(request):
     return render(request, 'statistics.html', context)
 
 
+
+def statistics2(request):
+    foodlist = Foodmenu.objects.all()
+    grouped_data = {}
+
+    # 按分类分组
+    for item in foodlist:
+        catename = item.catename.catename if item.catename else 'Uncategorized'
+        if catename not in grouped_data:
+            grouped_data[catename] = []
+        grouped_data[catename].append({
+            'foodid': item.foodid,
+            'foodname': item.foodname
+        })
+
+    if request.method == 'GET':
+        # 获取当前日期
+        current_date = timezone.now().date()
+        three_months_ago = current_date - relativedelta(months=3)
+        selected_food = None
+
+        #
+        orders = Customerorder.objects.filter(order_date__gte=three_months_ago, cancled=False, paid=True)
+
+        category_sales = {}
+        for category in Foodcategory.objects.all():
+            category_sales[category.catename] = []
+
+            # 获取该类别下的所有食品
+            food_items = Foodmenu.objects.filter(catename=category)
+
+            # 按周统计销量
+            for i in range(12):
+                week_date = current_date - timedelta(weeks=i)  # 每周的日期节点
+
+                # 计算该类别在当前这一周的销量
+                weekly_sales = orders.filter(
+                    order_date__year=week_date.year,
+                    order_date__week=week_date.isocalendar()[1],
+                    food__in=food_items.values_list('foodid', flat=True)
+                ).aggregate(total_quantity=Sum('quantity'))['total_quantity'] or 0
+
+                # 将每周的销量加入该类别的列表
+                category_sales[category.catename].append({
+                    'week': week_date,  # 每周的日期节点
+                    'sales': weekly_sales
+                })
+        for category, sales in category_sales.items():
+            sales.reverse()
+
+
+        receiptslist = Receipt.objects.filter(recept_date__gte=three_months_ago).order_by('recept_date')
+
+
+        return render(request, 'statistics2.html', {
+            'firstdate':three_months_ago,
+            'lastdate':current_date,
+            'selected_food': selected_food,
+            'grouped_data': grouped_data,
+            'category_sales': category_sales,
+            'receipts': receiptslist
+        })
+
+    if request.method == 'POST':
+        # 获取表单提交的起始日期和结束日期
+        start_date_str = request.POST.get('start_date')
+        end_date_str = request.POST.get('end_date')
+        selected_food = request.POST.get('selected_food')
+
+        # 转换为日期对象
+        start_date = timezone.datetime.strptime(start_date_str, '%Y-%m-%d').date() - relativedelta(days=1)
+        end_date = timezone.datetime.strptime(end_date_str, '%Y-%m-%d').date()
+
+        # 获取选定时间段内的订单
+        orders = Customerorder.objects.filter(order_date__gte=start_date, order_date__lte=end_date, cancled=False,
+                                              paid=True)
+
+        category_sales = {}
+        receiptslist = Receipt.objects.none()  # 初始化为空的 QuerySet
+
+        if not selected_food:
+            # selected_food 为空时，按原逻辑获取分类数据
+            for category in Foodcategory.objects.all():
+                category_sales[category.catename] = []
+
+                # 获取该类别下的所有食品
+                food_items = Foodmenu.objects.filter(catename=category)
+
+                current_date = start_date
+
+                # 生成数据点
+                while current_date <= end_date:
+                    next_date = current_date + relativedelta(days=1)
+
+                    if next_date > end_date:
+                        next_date = end_date
+
+                    # 计算该类别在当前时间段内的销量
+                    sales = orders.filter(
+                        order_date__gte=current_date,
+                        order_date__lte=next_date,
+                        food__in=food_items.values_list('foodid', flat=True)
+                    ).aggregate(total_quantity=Sum('quantity'))['total_quantity'] or 0
+
+                    # 将该时间段的销量加入该类别的列表
+                    category_sales[category.catename].append({
+                        'week': next_date,  # 每个数据点的日期节点
+                        'sales': sales
+                    })
+
+                    current_date = next_date + relativedelta(days=1)
+
+            # 获取选定时间段内的 receipt 列表
+            receiptslist = Receipt.objects.filter(recept_date__gte=start_date + relativedelta(days=1),
+                                                  recept_date__lte=end_date).order_by(
+                'recept_date')
+
+        else:
+            # 如果 selected_food 不为空，则只输出该 foodid 的数据
+            food = Foodmenu.objects.get(foodid=selected_food)
+            category_name = food.foodname
+            category_sales[category_name] = []
+
+            current_date = start_date
+
+            # 生成数据点
+            while current_date <= end_date:
+                next_date = current_date + relativedelta(days=1)
+
+                if next_date > end_date:
+                    next_date = end_date
+
+                # 计算该食品在当前时间段内的销量
+                sales = orders.filter(
+                    order_date__gte=current_date,
+                    order_date__lte=next_date,
+                    food=selected_food
+                ).aggregate(total_quantity=Sum('quantity'))['total_quantity'] or 0
+
+                # 将该时间段的销量加入列表
+                category_sales[category_name].append({
+                    'week': next_date,
+                    'sales': sales
+                })
+
+                current_date = next_date + relativedelta(days=1)
+
+            # 筛选与 selected_food 对应的 Customerorder 条目
+            selected_orders = Customerorder.objects.filter(
+                food=selected_food,
+                order_date__gte=start_date,
+                order_date__lte=end_date,
+                cancled=False,
+                paid=True
+            )
+
+            # 获取这些订单的 order_id
+            order_ids = selected_orders.values_list('order_id', flat=True)
+
+            # 使用 order_id 筛选相关的 receipts
+            receiptslist = Receipt.objects.filter(
+                order__in=order_ids,
+                recept_date__gte=start_date + relativedelta(days=1),
+                recept_date__lte=end_date
+            ).order_by('recept_date')
+
+        # 将数据传递给模板
+        return render(request, 'statistics2.html', {
+            'firstdate': timezone.datetime.strptime(start_date_str, '%Y-%m-%d').date(),
+            'lastdate': timezone.datetime.strptime(end_date_str, '%Y-%m-%d').date(),
+            'selected_food': selected_food,
+            'grouped_data': grouped_data,
+            'category_sales': category_sales,
+            'receipts': receiptslist
+        })

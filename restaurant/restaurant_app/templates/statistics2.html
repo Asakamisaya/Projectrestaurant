@@ -1,0 +1,365 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Statistics</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap/css/bootstrap.css' %}">
+    <script src=" https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js "></script>
+<script src="{% static 'js/echarts.min.js' %}"></script>
+        <script>
+        // 定义 JavaScript 函数，用于根据分类更新 item 下拉菜单
+        function updateItemDropdown() {
+            // 获取选择的分类
+            var catename = document.getElementById("catename-select").value;
+            var itemSelect = document.getElementById("item-select");
+
+            // 清空 item 下拉菜单中的旧选项
+            itemSelect.innerHTML = "";
+
+            // 获取当前分类下的 item 列表
+            var items = groupedData[catename] || [];
+
+            // 动态创建新的 item 选项
+            items.forEach(function(item) {
+                var option = document.createElement("option");
+                option.value = item.foodid; // 使用 item 的 foodid 作为值
+                option.text = item.name;    // 使用 item 的名称作为显示文本
+                itemSelect.appendChild(option);
+            });
+        }
+
+        // 示例数据：通过 views 传递的分组数据 (通过 Django 模板上下文)
+        var groupedData = {{ grouped_data|safe }};
+    </script>
+<style>
+        .table-tile {
+            width: 100%; /* 设置宽度 */
+            height: 500px; /* 设置高度 */
+            overflow: hidden; /* 隐藏溢出内容 */
+            border: 1px solid #ddd; /* 边框 */
+            margin-bottom: 20px; /* 磁贴之间的间距 */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .table-tile .panel-body {
+            overflow-y: auto; /* 设置垂直滚动条 */
+            flex-grow: 1; /* 让表格主体部分可伸缩 */
+        }
+
+
+
+        .panel-heading {
+            background-color: #f8f9fa;
+            padding: 10px;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+        }
+
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand">Statistics</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a href="/">Menu Manage <span class="sr-only">(current)</span></a></li>
+        <li><a href="/kitchen/">Kitchen</a></li>
+          <li><a href="/OrdersBoard/">OrdersBoard</a></li>
+
+          <li class="dropdown">
+          <a href="/Statistics/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Statistics <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li ><a href="/Statistics/">Dashboard</a></li>
+            <li class="active"><a href="/Statistics2/">Sales Report</a></li>
+
+          </ul>
+          </ul>
+        </div>
+  </div>
+
+
+</nav>
+
+
+
+
+<div class="container" style="width: 90%">
+               <div class="panel panel-default">
+                   <div class="panel-heading"><h3>Sales Report</h3>
+                    <div class="container mt-5">
+
+        <form id="date-form" method="post" action="/Statistics2/" class="form-inline pull-right">
+
+             {% csrf_token %}
+
+                    <!-- 食品选择下拉菜单，按照分类分组 -->
+                    <div class="form-group ">
+                        <label for="foodSelect" class="mr-2">Select Food:</label>
+                        <select id="foodSelect" class="form-control">
+                            <option value="">None</option>
+                            {% for catename, foods in grouped_data.items %}
+                                <optgroup label="{{ catename }}">
+                                    {% for food in foods %}
+                                        <option value="{{ food.foodid }}">{{ food.foodname }}</option>
+                                    {% endfor %}
+                                </optgroup>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+            <!-- 第一组日期选择 -->
+            <div class="form-group mr-3">
+                <label for="start-year" class="mr-2">Set Date:</label>
+                <select id="start-year" class="form-control mr-2"></select>
+                <select id="start-month" class="form-control mr-2"></select>
+                <select id="start-day" class="form-control mr-2"></select>
+            </div>
+
+            <!-- 第二组日期选择 -->
+            <div class="form-group mr-3">
+                <label for="end-year" class="mr-2">To:</label>
+                <select id="end-year" class="form-control mr-2"></select>
+                <select id="end-month" class="form-control mr-2"></select>
+                <select id="end-day" class="form-control mr-2"></select>
+            </div>
+
+            <!-- 提交按钮 -->
+            <input type="hidden" id="start-date-input" name="start_date">
+            <input type="hidden" id="end-date-input" name="end_date">
+            <input type="hidden" id="selected-food-input" name="selected_food">
+            <button type="button" class="btn btn-primary" onclick="submitDates()">Set</button>
+        </form>
+    </div>
+                </div>
+                <div class="panel-body">
+                <div id="0001" style="width: 100%;height:400px;"></div>
+
+</div>
+               </div>
+            </div>
+
+
+
+
+<!-- 添加更多行 -->
+
+                   <div class="container" style="width: 90%">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Record</h4>
+        </div>
+        <div class="panel-body">
+               <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Invoice</th>
+                <th>Receipt Date</th>
+                <th>Receipt Time</th>
+                <th>Payment Amount</th>
+                <th>Payment Method</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for receipt in receipts %}
+            <tr>
+                <td>{{ receipt.invoice }}</td>
+                <td>{{ receipt.recept_date|date:"Y-m-d" }}</td>
+                <td>{{ receipt.recept_time|time:"H:i:s" }}</td>
+                <td>{{ receipt.payment_amout }}</td>
+                <td>{{ receipt.payment_method }}</td>
+                <td><a href="/Receipt/{{ receipt.invoice }}/" target="_blank">View Receipt</a></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">No receipts found for the selected time period.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+    var firstDate = '{{ firstdate|date:"Y-m-d" }}';
+    var lastDate = '{{ lastdate|date:"Y-m-d" }}';
+    var selected_food ='{{ selected_food }}';
+
+    // 解析第一个日期，将其分为年、月、日
+    var dateParts = firstDate.split('-');
+    var defaultStartYear = dateParts[0];
+    var defaultStartMonth = dateParts[1];
+    var defaultStartDay = dateParts[2];
+
+    // 获取今天的日期
+    var dateParts = lastDate.split('-');
+    var currentYear =  dateParts[0];
+    var currentMonth = dateParts[1];
+    var currentDay = dateParts[2];
+
+    function populateSelect(element, start, end) {
+        for (let i = start; i <= end; i++) {
+            let option = document.createElement("option");
+            option.value = i;
+            option.text = i;
+            element.appendChild(option);
+        }
+    }
+
+
+    const yearRangeStart = currentYear - 3;
+
+
+    populateSelect(document.getElementById("start-year"), yearRangeStart, currentYear);
+    populateSelect(document.getElementById("end-year"), yearRangeStart, currentYear);
+
+
+    populateSelect(document.getElementById("start-month"), 1, 12);
+    populateSelect(document.getElementById("end-month"), 1, 12);
+
+
+    populateSelect(document.getElementById("start-day"), 1, 31);
+    populateSelect(document.getElementById("end-day"), 1, 31);
+
+
+    document.getElementById("start-year").value = defaultStartYear;
+    document.getElementById("start-month").value = parseInt(defaultStartMonth); // 以整数形式传递
+    document.getElementById("start-day").value = parseInt(defaultStartDay);
+
+
+    document.getElementById("end-year").value = currentYear;
+    document.getElementById("end-month").value = parseInt(currentMonth);
+    document.getElementById("end-day").value = parseInt(currentDay);
+    document.getElementById("foodSelect").value = selected_food;
+
+
+    function submitDates() {
+        const startYear = document.getElementById("start-year").value;
+        const startMonth = document.getElementById("start-month").value.padStart(2, '0'); // 保证两位数
+        const startDay = document.getElementById("start-day").value.padStart(2, '0');
+
+        const endYear = document.getElementById("end-year").value;
+        const endMonth = document.getElementById("end-month").value.padStart(2, '0');
+        const endDay = document.getElementById("end-day").value.padStart(2, '0');
+
+        const startDate = `${startYear}-${startMonth}-${startDay}`;
+        const endDate = `${endYear}-${endMonth}-${endDay}`;
+
+        const selectedFood = document.getElementById("foodSelect").value;
+
+
+        const startDateObj = new Date(`${startYear}-${startMonth}-${startDay}`);
+        const endDateObj = new Date(`${endYear}-${endMonth}-${endDay}`);
+
+        // 如果 startDate 晚于 endDate，弹出警告并阻止提交
+        if (startDateObj > endDateObj) {
+            alert("Start date cannot be later than end date.");
+            return;  // 阻止表单提交
+        }
+
+        // 如果日期正确，将数据赋值给隐藏的表单字段并提交
+        document.getElementById("start-date-input").value = startDate;
+        document.getElementById("end-date-input").value = endDate;
+        document.getElementById("selected-food-input").value = selectedFood;
+        document.getElementById("date-form").submit();
+    }
+</script>
+
+
+<script type="text/javascript">
+    var dom = document.getElementById('0001');
+    var myChart = echarts.init(dom, null, {
+      renderer: 'canvas',
+      useDirtyRect: false
+    });
+    var app = {};
+
+    var option;
+
+    option = {
+  title: {
+    text: ''
+  },
+  tooltip: {
+    trigger: 'axis'
+  },
+  legend: {
+    data: [
+        {% for category, weeks in category_sales.items %}
+        '{{ category }}',
+         {% endfor %}
+    ]
+  },
+  grid: {
+    left: '3%',
+    right: '4%',
+    bottom: '3%',
+    containLabel: true
+  },
+  toolbox: {
+    feature: {
+      saveAsImage: {}
+    }
+  },
+  xAxis: {
+    type: 'category',
+    boundaryGap: false,
+    data: [
+        {% for category, weeks in category_sales.items %}
+            {% if forloop.last %}
+                {% for week in weeks %}
+        '{{ week.week|date:"m-d" }}',
+                 {% endfor %}
+            {% endif %}
+    {% endfor %}
+    ]
+  },
+  yAxis: {
+    type: 'value'
+  },
+  series: [
+       {% for category, weeks in category_sales.items %}
+    {
+      name: '{{ category }}',
+      type: 'line',
+      stack: 'Total',
+      data: [
+          {% for week in weeks %}
+          {{ week.sales }},
+                {% endfor %}
+      ]
+    },
+      {% endfor %}
+
+  ]
+};
+
+    if (option && typeof option === 'object') {
+      myChart.setOption(option);
+    }
+
+    window.addEventListener('resize', myChart.resize);
+  </script>
+
+<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+<script src="{% static 'plugins/bootstrap/js/bootstrap.js' %}"></script>
+</body>
+</html>
