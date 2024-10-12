@@ -22,7 +22,7 @@ from django.views.static import serve
 
 from rest_framework import routers
 router = routers.DefaultRouter()
-from restaurant_app.views import ordermenu, menulist, addtomenu, addcatagory, edititem, removeitem, removeditems, retrieveitem ,deleteitems,submitorder,soldoutitem,removedsoldout,kitchen,cancleitem,kookingitem,finishitem,Checkout
+from restaurant_app.views import ordermenu, menulist, addtomenu, addcatagory, edititem, removeitem, removeditems, retrieveitem ,deleteitems,submitorder,soldoutitem,removedsoldout,kitchen,cancleitem,Ocancleitem,kookingitem,finishitem,Checkout,curretorder,customercancleitem,Orders
 
 
 
@@ -32,8 +32,16 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('Order/<int:nid>/', ordermenu),
     path('Order/<int:nid>/submitorder/', submitorder),
+    path('Order/<int:nid>/curretorder/', curretorder),
+
+
+
     path('kitchen/', kitchen),
+    path('OrdersBoard/', Orders),
     path('cancleitem/<str:table_number>/<str:order_id>/<str:logid>',cancleitem),
+    path('cancleitem/<str:table_number>/<str:order_id>/<str:logid>',Ocancleitem),
+
+    path('customercancleitem/<str:table_number>/<str:order_id>/<str:logid>', customercancleitem),
     path('kookingitem/<str:table_number>/<str:order_id>/<str:logid>',kookingitem),
     path('finishitem/<str:table_number>/<str:order_id>/<str:logid>', finishitem),
 

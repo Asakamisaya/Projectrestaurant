@@ -25,6 +25,48 @@ from django.utils import timezone
 
 # Create your views here.
 
+def curretorder(request,nid):
+    orders = Customerorder.objects.filter(paid=False,table_number=nid)
+    orderlist = {}
+    for order in orders:
+        foodname = Foodmenu.objects.get(foodid=order.food)
+        price = Foodmenu.objects.get(foodid=order.food).price
+        subtotal = int(order.quantity) * float(price)
+        orderlist.setdefault(order.order_id, [])
+        orderlist[order.order_id].append({
+            'table_number': order.table_number,
+            'foodid' : order.food,
+            'foodname': foodname,
+            'quantity': order.quantity,
+            'price': price,
+            'subtotal': subtotal,
+            'cancled': order.cancled,
+            'cooking': order.cooking,
+            'finished': order.finished,
+            'logid': order.logid,
+        })
+
+    return render(request,'curretorder.html',{'orderlist': orderlist})
+
+def Orders(request):
+    orders = Customerorder.objects.filter(paid=False)
+    orderlist = {}
+    for order in orders:
+        foodname = Foodmenu.objects.get(foodid=order.food)
+        orderlist.setdefault(order.order_id, [])
+        orderlist[order.order_id].append({
+            'table_number': order.table_number,
+            'foodid' : order.food,
+            'foodname': foodname,
+            'quantity': order.quantity,
+            'cancled': order.cancled,
+            'cooking': order.cooking,
+            'finished': order.finished,
+            'logid': order.logid,
+        })
+    #print(orderlist)
+
+    return render(request, 'Orders.html', {'orderlist': orderlist})
 
 
 def kitchen(request):
@@ -44,8 +86,32 @@ def kitchen(request):
             'logid': order.logid,
         })
     #print(orderlist)
-
     return render(request, 'Kitchen.html', {'orderlist': orderlist})
+
+def customercancleitem(request,table_number,logid,order_id):
+    cancleitem = models.Customerorder.objects.get(table_number=table_number,order_id=order_id,logid=logid)
+    Cooking = cancleitem.cooking
+    print(cancleitem)
+    if Cooking == False:
+        cancleitem.cancled = True
+        cancleitem.delete()
+        return redirect('/Order/' + table_number + '/curretorder/')
+    else:
+        tourl = f'/Order/{table_number}/curretorder/'
+        return HttpResponse(f"""
+                                <script>
+                                    alert('Can not cancel,it already on kooking!');
+                                    window.location.href = '{tourl}';
+                                </script>
+                            """)
+
+
+
+def Ocancleitem(request,table_number,logid,order_id):
+    cancleitem = models.Customerorder.objects.get(table_number=table_number,order_id=order_id,logid=logid)
+    cancleitem.cancled = True
+    cancleitem.save()
+    return redirect('/OrdersBoard')
 
 def cancleitem(request,table_number,logid,order_id):
     cancleitem = models.Customerorder.objects.get(table_number=table_number,order_id=order_id,logid=logid)
@@ -99,7 +165,7 @@ def Checkout(request,order_id):
         return HttpResponse("""
                         <script>
                             alert('Successful !');
-                            window.location.href = '/kitchen';
+                            window.location.href = '/OrdersBoard';
                         </script>
                     """)
 

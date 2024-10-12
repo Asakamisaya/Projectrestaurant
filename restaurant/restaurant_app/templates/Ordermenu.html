@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Order Menu</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap/css/bootstrap.css' %}">
 
     <link rel="stylesheet" href={% static "css/aui.css" %}>
     <link rel="stylesheet" href={% static "css/classify.css" %}>
@@ -122,6 +123,7 @@
 
     <div class="aui-tab" id="tab">
         <div class="aui-tab-item aui-active">Menu</div>
+        <div class="aui-tab-item ">Order status</div>
 
     </div>
 
@@ -226,10 +228,15 @@
         </div>
         <div class="aui-item aui-hide" id="tab1-con2">
 <!– page2 -->
+
+<iframe src="curretorder/" width="100%" height="100%"></iframe>
+
+
 <!– page2 end -->
 
         </div>
     </div>
+    <script src="{% static 'plugins/bootstrap/js/bootstrap.js' %}"></script>
     <script src="{% static 'script/api.js' %}"></script>
     <script src="{% static 'script/jquery.min.js' %}"></script>
     <script src="{% static 'script/add.js' %}"></script>
@@ -323,25 +330,15 @@ function submitData() {
 
 </script>
 
-    <script>
-        const searchInput = document.querySelector('.search-input');
-        const clearBtn = document.querySelector('.clear-btn');
-
-        clearBtn.addEventListener('click', () => {
-        searchInput.value = '';
-            });
-
-
-
-  document.addEventListener('DOMContentLoaded', function () {
-    // Select all search inputs
+    <script>document.addEventListener('DOMContentLoaded', function () {
+    // Select all search inputs and clear buttons
     const searchInputs = document.querySelectorAll('.search-input');
+    const clearBtns = document.querySelectorAll('.clear-btn');
 
     // Add event listeners to each search input
     searchInputs.forEach(function (searchInput) {
         searchInput.addEventListener('keyup', function () {
             const filter = searchInput.value.toLowerCase();
-            // Find the closest list containing this search input
             const menuItems = searchInput.closest('.right-con').querySelectorAll('.menu-txt');
 
             menuItems.forEach(function (item) {
@@ -353,6 +350,21 @@ function submitData() {
                 } else {
                     listItem.style.display = 'none';
                 }
+            });
+        });
+    });
+
+    // Add event listeners to each clear button
+    clearBtns.forEach(function (clearBtn, index) {
+        clearBtn.addEventListener('click', function () {
+            const searchInput = searchInputs[index];
+            searchInput.value = '';  // Clear the input value
+
+            // Reset all menu items
+            const menuItems = searchInput.closest('.right-con').querySelectorAll('.menu-txt');
+            menuItems.forEach(function (item) {
+                const listItem = item.closest('li');
+                listItem.style.display = '';  // Show all items
             });
         });
     });

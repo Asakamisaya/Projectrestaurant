@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Kitchen</title>
+    <title>OrdersBoard</title>
     <link rel="stylesheet" href="{% static 'plugins/bootstrap/css/bootstrap.css' %}">
 <style>
         .table-tile {
@@ -44,7 +44,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand">Kitchen Board</a>
+      <a class="navbar-brand">Current Orders Board</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -52,7 +52,7 @@
       <ul class="nav navbar-nav">
         <li><a href="/">Menu Manage <span class="sr-only">(current)</span></a></li>
         <li><a href="/kitchen/">Kitchen</a></li>
-          <li><a href="/OrdersBoard/">Kitchen</a></li>
+          <li><a href="/OrdersBoard/">OrdersBoard</a></li>
           <li><a href="Statistics/">Statistics</a></li>
           </ul>
         </div>
@@ -81,7 +81,8 @@
                             <th  style="width: 5%;">#</th>
                             <th  style="width: 35%;">Food Name</th>
                             <th>Quantity</th>
-                            <th style="width: 40%;">Options</th>
+                            <th>Status</th>
+                            <th style="width: 20%;">Options</th>
 
                         </tr>
                         </thead>
@@ -93,28 +94,28 @@
                             <td>{{ item.foodname }}</td>
                             <td>{{ item.quantity }}</td>
                             <td>
-                                <div class="btn-group " role="group" aria-label="Basic example" style="width: 100%">
+
 
                                 {% if not item.cancled %}
                                 {% if item.cooking %}
                                                      {% if item.finished %}
-                                <a class="btn btn-success col-md-6 dynamic-font">Finished</a>
+                                <a class="btn btn-success  dynamic-font">Finished</a>
                                 {% else %}
-                                <a class="btn btn-warning col-md-6" href="/finishitem/{{ item.table_number }}/{{ order_id }}/{{ item.logid }}" >Kooking</a>
+                                <a class="btn btn-warning " >Kooking</a>
                                 {% endif %}
                                 {% else %}
 
-                                    <a class="btn btn-default col-md-6" href="/kookingitem/{{ item.table_number }}/{{ order_id }}/{{ item.logid }}">Start</a>
+                                    <a class="btn btn-default " >Not start</a>
                                 {% endif %}
                                 {% endif %}
-
+                                </td><td>
                                 {% if not item.cancled %}
-                                    <a class="btn btn-default col-md-6" href="/cancleitem/{{ item.table_number }}/{{ order_id }}/{{ item.logid }} "onclick="if(!confirm('Cancel Order?')) { event.preventDefault(); }">Cancel</a>
+                                    <a class="btn btn-default " href="/Ocancleitem/{{ item.table_number }}/{{ order_id }}/{{ item.logid }} "onclick="if(!confirm('Cancel Order?')) { event.preventDefault(); }">Cancel</a>
                                     {% else %}
-                                    <a class="btn btn-danger col-md-6">Cancled</a>
+                                    <a class="btn btn-danger ">Cancled</a>
                                     {% endif %}
 
-                                    </div>
+
                             </td>
 
                         </tr>
@@ -125,8 +126,9 @@
                     </table>
                 </div>
 
-
-
+                <div class="panel-footer">
+                    <a class="btn btn-default col-md-4 dynamic-font pull-right" href="/checkout/{{ order_id }}/">Checkout</a>
+                </div>
             </div>
         </div>
 
