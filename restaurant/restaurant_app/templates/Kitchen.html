@@ -51,9 +51,9 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li><a href="/">Menu Manage <span class="sr-only">(current)</span></a></li>
-        <li><a href="/kitchen/">Kitchen</a></li>
-          <li><a href="/OrdersBoard/">Kitchen</a></li>
-          <li><a href="Statistics/">Statistics</a></li>
+        <li class="active"><a href="/kitchen/">Kitchen</a></li>
+          <li><a href="/OrdersBoard/">OrdersBoard</a></li>
+          <li><a href="/Statistics/">Statistics</a></li>
           </ul>
         </div>
 
@@ -70,12 +70,12 @@
 
        {% for order_id, items in orderlist.items %}
 
-        <div class="col-lg-4 col-md-6 col-sm-6">
+        <div class="col-md-6" >
             <div class="table-tile">
                 <div class="panel-heading">Table No. {{ items.0.table_number }}</div>
                 <div class="panel-heading">Order No. {{ order_id }}</div>
-                <div class="panel-body">
-                    <table class="table">
+                <div class="panel-body" >
+                    <table class="table" style="font-size: 18px;">
                         <thead>
                         <tr>
                             <th  style="width: 5%;">#</th>
@@ -90,7 +90,11 @@
                         {% for item in items %}
                         <tr>
                             <th scope="row">{{forloop.counter}}</th>
+                        {% if item.Srequest %}
+                        <td>{{ item.foodname }}&nbsp;&nbsp;&nbsp;##</td>
+                        {% else %}
                             <td>{{ item.foodname }}</td>
+                        {% endif %}
                             <td>{{ item.quantity }}</td>
                             <td>
                                 <div class="btn-group " role="group" aria-label="Basic example" style="width: 100%">
@@ -119,15 +123,59 @@
 
                         </tr>
 
+
                             {% endfor %}
+
+
+
 
                         </tbody>
                     </table>
+
+
+                     <table class="table"  style="font-size: 18px;">
+                        <thead>
+                        <tr>
+                            <th  style="width: 5%;"></th>
+                            <th  style="width: 30%;">Notice:</th>
+                            <th></th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for item in items %}
+                            {% if item.Srequest %}
+
+                        <tr>
+                            <th scope="row">{{forloop.counter}}</th>
+                            <td>{{ item.foodname }}</td>
+                            <td>Speecial request: {{ item.Srequest }}</td>
+
+
+                        </tr>
+                        {% endif %}
+
+
+
+{% endfor %}
+
+
+                        </tbody>
+                    </table>
+
+
+
                 </div>
 
 
 
+
+
             </div>
+
+
+
         </div>
 
     {% endfor %}

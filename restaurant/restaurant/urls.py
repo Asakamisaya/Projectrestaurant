@@ -22,7 +22,7 @@ from django.views.static import serve
 
 from rest_framework import routers
 router = routers.DefaultRouter()
-from restaurant_app.views import ordermenu, menulist, addtomenu, addcatagory, edititem, removeitem, removeditems, retrieveitem ,deleteitems,submitorder,soldoutitem,removedsoldout,kitchen,cancleitem,Ocancleitem,kookingitem,finishitem,Checkout,curretorder,customercancleitem,Orders
+from restaurant_app.views import ordermenu, menulist, addtomenu, addcatagory, edititem, removeitem, removeditems, retrieveitem ,deleteitems,submitorder,soldoutitem,removedsoldout,kitchen,cancleitem,Ocancleitem,kookingitem,finishitem,Checkout,curretorder,customercancleitem,Orders,statistics,srequest,pullReceipt
 
 
 
@@ -42,10 +42,14 @@ urlpatterns = [
     path('cancleitem/<str:table_number>/<str:order_id>/<str:logid>',Ocancleitem),
 
     path('customercancleitem/<str:table_number>/<str:order_id>/<str:logid>', customercancleitem),
+    path('Srequest/<str:table_number>/<str:order_id>/<str:logid>', srequest),
+
     path('kookingitem/<str:table_number>/<str:order_id>/<str:logid>',kookingitem),
     path('finishitem/<str:table_number>/<str:order_id>/<str:logid>', finishitem),
 
     path('checkout/<str:order_id>/', Checkout),
+    path('Receipt/<str:receipt_id>/', pullReceipt),
+
 
     path('', menulist),
     path('menuadmin/', menulist),
@@ -58,7 +62,7 @@ urlpatterns = [
     path('deleteitems/<int:nid>/', deleteitems),
     path('soldoutitem/<int:nid>/', soldoutitem),
     path('removedsoldout/<int:nid>/', removedsoldout),
-
+    path('Statistics/', statistics),
 
 
     url('/', include(router.urls)),

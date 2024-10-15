@@ -55,12 +55,13 @@
                         <thead>
                         <tr>
                             <th  style="width: 5%;">#</th>
-                            <th  style="width: 20%;">Food Name</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                            <th>Subtotal</th>
-                            <th style="width: 20%;">Status</th>
-                            <th style="width: 20%;">Options</th>
+                            <th  style="width: 15%;">Food Name</th>
+                            <th style="width: 5%;">Quantity</th>
+                            <th style="width: 10%;">Price</th>
+                            <th style="width: 10%;">Subtotal</th>
+                            <th style="width: 15%;">Status</th>
+                            <th >Special Request</th>
+                            <th style="width: 10%;">Options</th>
 
                         </tr>
                         </thead>
@@ -74,6 +75,7 @@
                             <td>{{ item.quantity }}</td>
                             <td>{{ item.price }}</td>
                             <td>{{ item.subtotal }}</td>
+
                             <td>
                                 <div class="btn-group " role="group" aria-label="Basic example" style="width: 100%">
 
@@ -89,7 +91,17 @@
                                     <a class="btn btn-default col-md-6">Preparing</a>
                                 {% endif %}
                                 {% endif %}
-                                </td><td>
+                                </td>
+
+                             {% if item.Srequest %}
+                            <td>{{ item.Srequest }}<a class="btn btn-default pull-right col-md-3" href="/Srequest/{{ item.table_number }}/{{ order_id }}/{{ item.logid }} ">Edit</a></td>
+                                 {% else %}
+                                 <td><a class="btn btn-default col-md-6" href="/Srequest/{{ item.table_number }}/{{ order_id }}/{{ item.logid }} ">Add Special request</a></td>
+
+                            {% endif %}
+
+                            <td>
+
 
                                 {% if not item.cooking %}
                                     <a class="btn btn-default col-md-6" href="/customercancleitem/{{ item.table_number }}/{{ order_id }}/{{ item.logid }} "onclick="if(!confirm('Cancel Order?')) { event.preventDefault(); }">Cancel</a>
@@ -99,6 +111,7 @@
 
                                     </div>
                             </td>
+
 
                         </tr>
 

@@ -7,7 +7,7 @@ class foofmenuadmin(admin.ModelAdmin):
     list_display = (' foodid','foodname','description','price')
 
 class Customerorderadmin(admin.ModelAdmin):
-    list_display = (' order_id','table_number','food','order_date','quantity')
+    list_display = (' order_id','table_number','food','foodname','price','Srequest','order_date','quantity')
 
 class Foodcategoryadmin(admin.ModelAdmin):
     list_display = ('catename')

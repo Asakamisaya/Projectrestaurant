@@ -32,6 +32,9 @@ class Customerorder(models.Model):
     order_id = models.CharField(verbose_name='Order_ID',max_length=5,default=None)
     table_number = models.CharField(verbose_name='Table_Number', max_length=5)
     food = models.CharField(verbose_name='Food_ID', max_length=5)
+    foodname = models.CharField(verbose_name='Food_Name', max_length=50,default=None)
+    price = models.DecimalField(verbose_name='Price', max_digits=10, decimal_places=2, default=None)
+    Srequest = models.CharField(verbose_name='special request', max_length=200,default=None,null=True, blank=True)
     order_date = models.DateField(verbose_name='Order_Date')
     quantity = models.IntegerField(verbose_name='Quantity')
     cancled =  models.BooleanField(default=False)
@@ -66,5 +69,8 @@ class Receipt(models.Model):
         return self.invoice
 
 
+class employee(models.Model):
+    employeename = models.CharField(verbose_name='Employee Name', max_length=50)
+    password = models.CharField(verbose_name='Password', max_length=20)
 
 
