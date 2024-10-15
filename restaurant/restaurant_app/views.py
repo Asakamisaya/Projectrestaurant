@@ -31,6 +31,8 @@ import calendar
 
 
 # Create your views here.
+def QR(request):
+    return render(request, 'QR.html')
 
 def curretorder(request,nid):
     orders = Customerorder.objects.filter(paid=False,table_number=nid)

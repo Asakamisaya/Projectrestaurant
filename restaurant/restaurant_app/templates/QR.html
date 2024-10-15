@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recept</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap/css/bootstrap.css' %}">
+<style>
+        .table-tile {
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .table-tile .panel-body {
+            overflow-y: auto; /* 设置垂直滚动条 */
+            flex-grow: 1; /* 让表格主体部分可伸缩 */
+        }
+
+
+
+        .panel-heading {
+            background-color: #f8f9fa;
+            padding: 10px;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+        }
+
+</style>
+</head>
+<body>
+<div class=" container" style="width: 800px">
+
+ <img class=img src="/Media/QR.png" height="800" width="800" >
+
+<!-- 添加更多行 -->
+
+
+<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+<script src="{% static 'plugins/bootstrap/js/bootstrap.js' %}"></script>
+</body>
+</html>

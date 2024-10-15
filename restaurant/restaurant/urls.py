@@ -22,7 +22,7 @@ from django.views.static import serve
 
 from rest_framework import routers
 router = routers.DefaultRouter()
-from restaurant_app.views import ordermenu, menulist, addtomenu, addcatagory, edititem, removeitem, removeditems, retrieveitem ,deleteitems,submitorder,soldoutitem,removedsoldout,kitchen,cancleitem,Ocancleitem,kookingitem,finishitem,Checkout,curretorder,customercancleitem,Orders,statistics,srequest,pullReceipt
+from restaurant_app.views import ordermenu, menulist, addtomenu, addcatagory, edititem, removeitem, removeditems, retrieveitem ,deleteitems,submitorder,soldoutitem,removedsoldout,kitchen,cancleitem,Ocancleitem,kookingitem,finishitem,Checkout,curretorder,customercancleitem,Orders,statistics,srequest,pullReceipt,QR
 
 
 
@@ -63,6 +63,7 @@ urlpatterns = [
     path('soldoutitem/<int:nid>/', soldoutitem),
     path('removedsoldout/<int:nid>/', removedsoldout),
     path('Statistics/', statistics),
+    path('QR/', QR),
 
 
     url('/', include(router.urls)),
