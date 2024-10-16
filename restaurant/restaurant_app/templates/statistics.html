@@ -1,0 +1,472 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Statistics</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap/css/bootstrap.css' %}">
+    <script src=" https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js "></script>
+<script src="{% static 'js/echarts.min.js' %}"></script>
+<style>
+        .table-tile {
+            width: 100%; /* 设置宽度 */
+            height: 500px; /* 设置高度 */
+            overflow: hidden; /* 隐藏溢出内容 */
+            border: 1px solid #ddd; /* 边框 */
+            margin-bottom: 20px; /* 磁贴之间的间距 */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .table-tile .panel-body {
+            overflow-y: auto; /* 设置垂直滚动条 */
+            flex-grow: 1; /* 让表格主体部分可伸缩 */
+        }
+
+
+
+        .panel-heading {
+            background-color: #f8f9fa;
+            padding: 10px;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+        }
+
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand">Statistics</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a href="/">Menu Manage <span class="sr-only">(current)</span></a></li>
+        <li><a href="/kitchen/">Kitchen</a></li>
+          <li><a href="/OrdersBoard/">OrdersBoard</a></li>
+          <li class="active"><a href="/Statistics/">Statistics</a></li>
+          </ul>
+        </div>
+  </div>
+
+
+</div>
+</nav>
+
+
+
+
+<div class="container" style="width: 90%">
+               <div class="panel panel-default">
+                <div class="panel-heading">Current sales</div>
+                <div class="panel-body">
+
+<div class="row">
+    <div class="col-sm-3">
+           <div class="panel panel-default">
+                <div class="panel-heading">Years sale
+                <select class="pull-right" id="yearSelect">
+        <option value="Now" selected>Current</option>
+                     {% for item in yearly_totals %}
+
+        <option value="{{ item.year }}">{{ item.year }}</option>
+                {% endfor %}
+    </select>
+                </div>
+                <div class="panel-body">
+                    <h3 style="text-align: center;" id="YearSaleAmount">THB {{ year_total }}</h3>
+                    </div>
+
+                </div>
+    </div>
+         <div class="col-sm-3">
+           <div class="panel panel-default">
+                <div class="panel-heading">Quarter sale
+                <select class="pull-right" id="QuarterSelect">
+        <option value="Now" selected>Current</option>
+                     {% for item in quarterly_totals %}
+
+        <option value="{{ item.quarter }}">{{ item.quarter }}</option>
+                {% endfor %}
+    </select>
+                </div>
+                <div class="panel-body">
+                    <h3 style="text-align: center;" id="QuarterSaleAmount">THB {{ quarter_total }}</h3>
+                    </div>
+
+                </div>
+    </div>
+              <div class="col-sm-3">
+           <div class="panel panel-default">
+                <div class="panel-heading">Month sale
+                <select class="pull-right" id="monthSelect">
+        <option value="Now" selected>Current</option>
+                     {% for item in monthly_totals %}
+
+        <option value="{{ item.month }}">{{ item.month }}</option>
+                {% endfor %}
+    </select>
+                </div>
+
+                <div class="panel-body">
+                    <h3 style="text-align: center;" id="monthSaleAmount">THB {{ month_total }}</h3>
+                    </div>
+
+                </div>
+    </div>
+                   <div class="col-sm-3">
+           <div class="panel panel-default">
+                <div class="panel-heading">Day sale
+                <select class="pull-right" id="daySelect">
+        <option value="Now" selected>Current</option>
+                     {% for item in daily_totals %}
+
+        <option value="{{ item.date }}">{{ item.date }}</option>
+                {% endfor %}
+    </select>
+                </div>
+                <div class="panel-body">
+                    <h3 style="text-align: center;" id="daySaleAmount">THB {{ day_total }}</h3>
+                    </div>
+
+                </div>
+
+                        </div>
+
+                </div>
+    </div>
+
+</div>
+
+
+
+</div>
+
+
+
+
+<div class="container" style="width: 90%">
+
+    <div class="row">
+
+            <div class="col-sm-10 lh-sm-3" >
+                <div class="panel panel-heading">Monthly Sales</div>
+                <div class="panel-body">
+                    <div id="0001" style="width: 100%;height:400px;"></div>
+                </div>
+
+                </div>
+
+
+            <div class="column col-sm-2 lh-sm-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">Day Sales quantity</div>
+                <div class="panel-body">
+                    <h4 style="text-align: center;"> {{ day_totalcount }}</h4>
+                    </div>
+
+                </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">Month Sales quantity</div>
+                <div class="panel-body">
+                    <h4 style="text-align: center;"> {{ month_totalcount }}</h4>
+                    </div>
+
+                </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">Year Sales quantity</div>
+                <div class="panel-body">
+                    <h4 style="text-align: center;"> {{ year_totalcount }}</h4>
+                    </div>
+
+                </div>
+
+        </div>
+        </div>
+     <div class="col-sm-3 lh-sm-3" >
+                   <div class="panel-heading">Top 5 Sales of Year</div>
+                    <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th  style="width: 5%;">#</th>
+                            <th  style="width: 60%;">Food Name</th>
+                            <th>Quantity</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                    {% for item in top_yearly_foods %}
+                        <tr>
+                            <th scope="row">{{forloop.counter}}</th>
+                            <td>{{ item.foodname }}</td>
+                            <td>{{ item.total_quantity }}</td>
+
+                        </tr>
+                    {% endfor %}
+
+
+                        </tbody>
+                    </table>
+                </div>
+     </div>
+
+    <div class="col-sm-3 lh-sm-3" >
+                   <div class="panel-heading">Top 5 Sales of Month</div>
+                    <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th  style="width: 5%;">#</th>
+                            <th  style="width: 60%;">Food Name</th>
+                            <th>Quantity</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+
+
+                         {% for item in top_monthly_foods %}
+                        <tr>
+                            <th scope="row">{{forloop.counter}}</th>
+                            <td>{{ item.foodname }}</td>
+                            <td>{{ item.total_quantity }}</td>
+
+                        </tr>
+                    {% endfor %}
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+     </div>
+
+    <div class="col-sm-3 lh-sm-3" >
+                   <div class="panel-heading">Bottom 5 Sales of Year</div>
+                    <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th  style="width: 5%;">#</th>
+                            <th  style="width: 60%;">Food Name</th>
+                            <th>Quantity</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+
+
+                        {% for item in bottom_yearly_foods  %}
+                        <tr>
+                            <th scope="row">{{forloop.counter}}</th>
+                            <td>{{ item.foodname }}</td>
+                            <td>{{ item.total_quantity }}</td>
+
+                        </tr>
+                    {% endfor %}
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+     </div>
+
+    <div class="col-sm-3 lh-sm-3" >
+                   <div class="panel-heading">Bottom 5 Sales of Month</div>
+                    <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th  style="width: 5%;">#</th>
+                            <th  style="width: 60%;">Food Name</th>
+                            <th>Quantity</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+
+
+                        {% for item in bottom_monthly_foods  %}
+                        <tr>
+                            <th scope="row">{{forloop.counter}}</th>
+                            <td>{{ item.foodname }}</td>
+                            <td>{{ item.total_quantity }}</td>
+
+                        </tr>
+                    {% endfor %}
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+     </div>
+
+    </div>
+</div>
+
+
+<!-- 添加更多行 -->
+
+<script>
+  const yearSelect = document.getElementById('yearSelect');
+  const yearsaleAmount = document.getElementById('YearSaleAmount');
+
+  yearSelect.addEventListener('change', function() {
+    const selectedYear = this.value;
+    let newyearSaleAmount;
+
+    // 根据选择的年份设置销售额
+    switch (selectedYear) {
+    case 'Now':
+        newyearSaleAmount = 'THB {{ year_total }}';
+        break;
+         {% for item in yearly_totals %}
+      case '{{ item.year }}':
+        newyearSaleAmount = 'THB {{ item.total }}';
+        break;
+      {% endfor %}
+    }
+
+    yearsaleAmount.textContent = newyearSaleAmount;
+  });
+</script>
+<script>
+  const quarterSelect = document.getElementById('QuarterSelect');
+  const quartersaleAmount = document.getElementById('QuarterSaleAmount');
+
+  quarterSelect.addEventListener('change', function() {
+    const selectedquarter = this.value;
+    let newquarterSaleAmount;
+
+    // 根据选择的季度设置销售额
+    switch (selectedquarter) {
+    case 'Now':
+        newquarterSaleAmount = 'THB {{ quarter_total }}';
+        break;
+         {% for item in quarterly_totals %}
+      case '{{ item.quarter }}':
+        newquarterSaleAmount = 'THB {{ item.total }}';
+        break;
+      {% endfor %}
+    }
+
+    quartersaleAmount.textContent = newquarterSaleAmount;
+  });
+</script>
+<script>
+    const monthSelect = document.getElementById('monthSelect');
+  const monthsaleAmount = document.getElementById('monthSaleAmount');
+
+  monthSelect.addEventListener('change', function() {
+    const selectedmonth = this.value;
+    let newmonthSaleAmount;
+
+    // 根据选择的月份设置销售额
+    switch (selectedmonth) {
+    case 'Now':
+        newmonthSaleAmount = 'THB {{ month_total }}';
+        break;
+         {% for item in monthly_totals %}
+      case '{{ item.month }}':
+        newmonthSaleAmount = 'THB {{ item.total }}';
+        break;
+      {% endfor %}
+    }
+
+    monthsaleAmount.textContent = newmonthSaleAmount;
+  });
+</script>
+<script>
+    const daySelect = document.getElementById('daySelect');
+  const daysaleAmount = document.getElementById('daySaleAmount');
+
+  daySelect.addEventListener('change', function() {
+    const selectedday = this.value;
+    let newdaySaleAmount;
+
+    // 根据选择的星期设置销售额
+    switch (selectedday) {
+    case 'Now':
+        newdaySaleAmount = 'THB {{ day_total }}';
+        break;
+         {% for item in daily_totals %}
+      case '{{ item.date }}':
+        newdaySaleAmount = 'THB {{ item.total }}';
+        break;
+      {% endfor %}
+    }
+
+    daysaleAmount.textContent = newdaySaleAmount;
+  });
+</script>
+
+<script type="text/javascript">
+      // 基于准备好的dom，初始化echarts实例
+      var myChart = echarts.init(document.getElementById('0001'));
+
+      // 指定图表的配置项和数据
+      var option = {
+        title: {
+          text: 'Sales (THB)'
+        },
+        tooltip: {},
+        legend: {
+          data: ['Sales']
+        },
+        xAxis: {
+          data: [
+               {% for item in monthly_totals %}
+              '{{ item.month }}',
+              {% endfor %}
+          ]
+        },
+        yAxis: {},
+        series: [
+          {
+            name: 'sales (THB)',
+            type: 'bar',
+            data: [
+                {% for item in monthly_totals %}
+              '{{ item.total }}',
+              {% endfor %}
+            ]
+          }
+        ]
+      };
+
+      // 使用刚指定的配置项和数据显示图表。
+      myChart.setOption(option);
+    </script>
+
+<script>
+  let total = 0.00;
+  {% for order_id, items in checklist.items %}
+      {% for item in items %}
+           {% if not item.cancled %}
+    total += {{ item.subtotal }};
+          {% endif %}
+          {% endfor %}
+
+  {% endfor %}
+  document.getElementById('total_price').textContent = `Total: ${total.toFixed(2)}`;
+</script>
+
+<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+<script src="{% static 'plugins/bootstrap/js/bootstrap.js' %}"></script>
+</body>
+</html>

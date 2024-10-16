@@ -6,6 +6,7 @@ from importlib.resources import files
 from itertools import filterfalse
 from lib2to3.fixes.fix_input import context
 from tabnanny import check
+from turtle import TurtleGraphicsError
 
 from PIL.ImageOps import posterize
 from django.contrib.auth.models import update_last_login
@@ -270,10 +271,11 @@ def pullReceipt(request,receipt_id):
         price = item.price
         subtotal = int(item.quantity) * float(price)
         subtotal = f"{subtotal:.2f}"
-        total = float(total) + float(subtotal)
-        total = f"{total:.2f}"
-        checklist.setdefault(item.order_id, [])
-        checklist[item.order_id].append({
+        if item.cancled == True:
+            total = float(total) + float(subtotal)
+            total = f"{total:.2f}"
+            checklist.setdefault(item.order_id, [])
+            checklist[item.order_id].append({
             'InvoiceID': receipt_id,
             'orderid':orderid,
             'table_number': item.table_number,
@@ -284,7 +286,7 @@ def pullReceipt(request,receipt_id):
             'subtotal': subtotal,
             'Total': total,
             'cancled': item.cancled,
-        })
+         })
     #print(checklist)
     return render(request, 'Receipt.html', {'checklist': checklist})
 

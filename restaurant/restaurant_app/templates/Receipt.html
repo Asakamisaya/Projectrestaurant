@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recept</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap/css/bootstrap.css' %}">
+<style>
+        .table-tile {
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .table-tile .panel-body {
+            overflow-y: auto; /* 设置垂直滚动条 */
+            flex-grow: 1; /* 让表格主体部分可伸缩 */
+        }
+
+
+
+        .panel-heading {
+            background-color: #f8f9fa;
+            padding: 10px;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+        }
+
+</style>
+</head>
+<body>
+<div class=" container" style="width: 400px">
+
+<h4>XiangJiaYuan Chinese Restaurant</h4>
+{% for order_id, items in checklist.items %}
+<h4>Recept No. {{ items.0.InvoiceID }}</h4>
+<br><br><br>{% endfor %}
+
+       {% for order_id, items in checklist.items %}
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th  style="width: 5%;"> </th>
+                            <th  style="width: 30%;">Food Name</th>
+                            <th style="width: 5%;">Quantity</th>
+                            <th style="width: 10%;">Price</th>
+                            <th style="width: 10%;">Subtotal</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+
+
+                        {% for item in items %}
+                        <tr>
+                            <th scope="row"></th>
+                            <td>{{ item.foodname }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.price }}</td>
+                            <td>{{ item.subtotal }}</td>
+
+                            <td>
+                            </td>
+
+
+                        </tr>
+
+                            {% endfor %}
+
+
+                        </tbody>
+                    </table>
+
+{% endfor %}
+
+
+ <br><br><br>
+{% for order_id, items in checklist.items %}
+     {% for item in items %}
+    {% if forloop.last %}
+        <h3 class="pull-right">Total : {{ item.Total }}</h3>
+    {% endif %}
+         {% endfor %}
+    <br><br><br>
+{% endfor %}
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<!-- 添加更多行 -->
+
+
+<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+<script src="{% static 'plugins/bootstrap/js/bootstrap.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add A Category To Menu</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap/css/bootstrap.css' %}">
+<style>
+zoomImage{
+
+width:100%;
+height:0;
+padding-bottom: 100%;
+overflow:hidden;
+background-position: center center;
+background-repeat: no-repeat;
+-webkit-background-size:cover;
+-moz-background-size:cover;
+background-size:cover;
+
+}
+</style>
+</head>
+<body>
+<div class="panel panel-default">
+  <div class="panel-heading">Add Special Request</div>
+  <div class="panel-body">
+<div class="container-fluid" style="padding-right: 60%; padding-left: 5%">
+    <form style="width: 50%" method="post" action="/Srequest/{{ table_number }}/{{ order_id }}/{{ logid }}" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                <label>{{ field.label }}:</label>
+                {{ field }}
+            </div>
+        {% endfor %}
+
+    <input type="submit" value="Submit" name="_save" class="btn btn-success">
+    <a class="btn btn-default" id="backLink" href="">Back</a>
+
+
+    </form>
+    </div>
+
+</div>
+
+    <script>
+        const url = new URL(window.location.href);
+        const Segment = url.pathname.split('/')[2];
+        const backLink = document.getElementById("backLink");
+        backLink.href = `/Order/${Segment}/curretorder/`;
+</script>
+<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+<script src="{% static 'plugins/bootstrap/js/bootstrap.js' %}"></script>
+</body>
+</html>

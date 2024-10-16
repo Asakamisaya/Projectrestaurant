@@ -39,7 +39,7 @@ urlpatterns = [
     path('kitchen/', kitchen),
     path('OrdersBoard/', Orders),
     path('cancleitem/<str:table_number>/<str:order_id>/<str:logid>',cancleitem),
-    path('cancleitem/<str:table_number>/<str:order_id>/<str:logid>',Ocancleitem),
+    path('Ocancleitem/<str:table_number>/<str:order_id>/<str:logid>',Ocancleitem),
 
     path('customercancleitem/<str:table_number>/<str:order_id>/<str:logid>', customercancleitem),
     path('Srequest/<str:table_number>/<str:order_id>/<str:logid>', srequest),
