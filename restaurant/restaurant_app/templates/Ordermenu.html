@@ -269,31 +269,32 @@
     </script>
 
     <script>
-function comfirmsubmit(){
-      const btn = document.getElementById('btn-select');
-  if (btn.classList.contains('disable')) {
-    event.preventDefault();
-    return false;
-  }
-  else{
+function comfirmsubmit() {
+    const shopCartList = $(".shopcart-list.fold-transition");
+    const btn = document.getElementById('btn-select');
 
-    if (confirm('Confirm and submit your orders?')) {
-        submitData();
-    } else {
+    if (shopCartList.is(":hidden")) {
+        $(".up1").toggle();
+        shopCartList.show();
+        return false;
+    }
+
+    if (btn.classList.contains('disable')) {
         event.preventDefault();
+        return false;
+    } else {
+        if (confirm('Confirm and submit your orders?')) {
+            submitData();
+        } else {
+            event.preventDefault();
+        }
     }
 }
-  }
+
 function submitData() {
-
-
-
-
-
-
     const form = document.getElementById('orderform');
     const listContent = document.querySelector('.list-content');
-    const formData = []; // 创建一个数组存储数据
+    const formData = [];  // Create an array to store data
 
     listContent.querySelectorAll('li').forEach(item => {
         const orderName = item.querySelector('.accountName');

@@ -146,35 +146,48 @@ def srequest(request,table_number,logid,order_id):
 
 
 def Ocancleitem(request,table_number,logid,order_id):
-    cancleitem = models.Customerorder.objects.get(table_number=table_number,order_id=order_id,logid=logid)
-    cancleitem.cancled = True
-    cancleitem.save()
-    checkordsers = models.Customerorder.objects.filter(table_number=table_number, order_id=order_id, cancled=False)
-    if not checkordsers:
-        clean = models.Customerorder.objects.filter(table_number=table_number, order_id=order_id, cancled=True)
-        for item in clean:
-            item.paid = True
-            item.save()
-    return redirect('/OrdersBoard')
+    if models.Customerorder.objects.filter(table_number=table_number, order_id=order_id, logid=logid).exists():
+        cancleitem = models.Customerorder.objects.get(table_number=table_number,order_id=order_id,logid=logid)
+        cancleitem.cancled = True
+        cancleitem.save()
+        checkordsers = models.Customerorder.objects.filter(table_number=table_number, order_id=order_id, cancled=False)
+        if not checkordsers:
+            clean = models.Customerorder.objects.filter(table_number=table_number, order_id=order_id, cancled=True)
+            for item in clean:
+                item.paid = True
+                item.save()
+        return redirect('/OrdersBoard')
+    else:
+        return HttpResponse("""
+            <script>alert("Order not found. Order.The order has been removed by the customer ");
+             window.location.href="/OrdersBoard";</script>""")
 
 def cancleitem(request,table_number,logid,order_id):
-    cancleitem = models.Customerorder.objects.get(table_number=table_number,order_id=order_id,logid=logid)
-    cancleitem.cancled = True
-    cancleitem.save()
-    checkordsers = models.Customerorder.objects.filter(table_number=table_number,order_id=order_id,cancled= False)
-    if not checkordsers:
-        clean = models.Customerorder.objects.filter(table_number=table_number, order_id=order_id, cancled=True)
-        for item in clean:
-            item.paid=True
-            item.save()
-    return redirect('/kitchen')
-
+    if models.Customerorder.objects.filter(table_number=table_number, order_id=order_id, logid=logid).exists():
+        cancleitem = models.Customerorder.objects.get(table_number=table_number,order_id=order_id,logid=logid)
+        cancleitem.cancled = True
+        cancleitem.save()
+        checkordsers = models.Customerorder.objects.filter(table_number=table_number,order_id=order_id,cancled= False)
+        if not checkordsers:
+            clean = models.Customerorder.objects.filter(table_number=table_number, order_id=order_id, cancled=True)
+            for item in clean:
+                item.paid=True
+                item.save()
+        return redirect('/kitchen')
+    else:
+        return HttpResponse("""
+            <script>alert("Order not found. Order.The order has been removed by the customer ");
+             window.location.href="/kitchen";</script>""")
 def kookingitem(request,table_number, logid,order_id):
-    kookingitem = models.Customerorder.objects.get(table_number=table_number,order_id=order_id,logid=logid)
-    kookingitem.cooking = True
-    kookingitem.save()
-    return redirect('/kitchen')
-
+    if models.Customerorder.objects.filter(table_number=table_number, order_id=order_id, logid=logid).exists():
+        kookingitem = models.Customerorder.objects.get(table_number=table_number,order_id=order_id,logid=logid)
+        kookingitem.cooking = True
+        kookingitem.save()
+        return redirect('/kitchen')
+    else:
+        return HttpResponse("""
+            <script>alert("Order not found. Order.The order has been removed by the customer ");
+             window.location.href="/kitchen";</script>""")
 def finishitem(request,table_number, logid,order_id):
     finishitem = models.Customerorder.objects.get(table_number=table_number,order_id=order_id,logid=logid)
     finishitem.finished = True

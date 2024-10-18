@@ -107,12 +107,13 @@
 
                                     <a class="btn btn-default " >Not start</a>
                                 {% endif %}
+                                    {% else %}
+                                    <a class="btn btn-danger ">Cancled</a>
                                 {% endif %}
                                 </td><td>
                                 {% if not item.cancled %}
                                     <a class="btn btn-default " href="/Ocancleitem/{{ item.table_number }}/{{ order_id }}/{{ item.logid }} "onclick="if(!confirm('Cancel Order?')) { event.preventDefault(); }">Cancel</a>
                                     {% else %}
-                                    <a class="btn btn-danger ">Cancled</a>
                                     {% endif %}
 
 

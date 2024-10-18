@@ -71,10 +71,18 @@
                         {% for item in items %}
                         <tr>
                             <th scope="row">{{forloop.counter}}</th>
+                            {% if not item.cancled %}
                             <td>{{ item.foodname }}</td>
+                            {% else %}
+                            <td>{{ item.foodname }} [Canceled]</td>
+                            {% endif %}
                             <td>{{ item.quantity }}</td>
                             <td>{{ item.price }}</td>
-                            <td>{{ item.subtotal }}</td>
+                            {% if not item.cancled %}
+                             <td>{{ item.subtotal }}</td>
+                            {% else %}
+                            <td><del>{{ item.subtotal }}</del></td>
+                            {% endif %}
 
                             <td>
                                 <div class="btn-group " role="group" aria-label="Basic example" style="width: 100%">
@@ -90,24 +98,34 @@
 
                                     <a class="btn btn-default col-md-6">Preparing</a>
                                 {% endif %}
+                                    {% else %}
+                                   <a class="btn btn-danger col-md-6" >Canceled</a>
                                 {% endif %}
                                 </td>
 
+
+                            {% if not item.cancled %}
                              {% if item.Srequest %}
                             <td>{{ item.Srequest }}<a class="btn btn-default pull-right col-md-3" href="/Srequest/{{ item.table_number }}/{{ order_id }}/{{ item.logid }} ">Edit</a></td>
                                  {% else %}
                                  <td><a class="btn btn-default col-md-6" href="/Srequest/{{ item.table_number }}/{{ order_id }}/{{ item.logid }} ">Add Special Requirement</a></td>
 
                             {% endif %}
+                                {% else %}
+                                <td>Cancelled by the kitchen because the item cannot be cooked at this time. You can continue to order other items or contact the staff.</td>
+                            {% endif %}
 
                             <td>
 
 
+                                {% if not item.cancled %}
                                 {% if not item.cooking %}
                                     <a class="btn btn-default col-md-6" href="/customercancleitem/{{ item.table_number }}/{{ order_id }}/{{ item.logid }} "onclick="if(!confirm('Cancel Order?')) { event.preventDefault(); }">Cancel</a>
                                     {% else %}
-                                    <a class="btn btn-danger col-md-6" onclick="if(!confirm('Can not cancel,it already on kooking!')) { event.preventDefault(); }">Cancled</a>
+                                    <a class="btn btn-danger col-md-6" onclick="if(!confirm('Can not cancel,it already on kooking!')) { event.preventDefault(); }">Cancel</a>
                                     {% endif %}
+                                {% else %}
+                                {% endif %}
 
                                     </div>
                             </td>
