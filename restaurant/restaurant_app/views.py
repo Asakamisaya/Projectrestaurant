@@ -535,6 +535,9 @@ def get_top_bottom_foods(queryset, top_n=5):
 
     return top_foods, bottom_foods
 
+def format_currency(value):
+    return "{:,.2f}".format(value)
+
 def statistics(request):
     today = timezone.now().date()
     current_year = today.year
@@ -575,12 +578,16 @@ def statistics(request):
     day_total = Receipt.objects.filter(recept_date=today).aggregate(Sum('payment_amout'))['payment_amout__sum'] or 0
 
     # 每月销售额
+    formtmonthly_totals = []
     monthly_totals = []
     for month in range(1, 13):
         monthly_total = Receipt.objects.filter(recept_date__year=current_year, recept_date__month=month).aggregate(
             Sum('payment_amout'))['payment_amout__sum'] or 0
         month_name = calendar.month_abbr[month]
+        formtmonthly_total = format_currency(monthly_total)
+        formtmonthly_totals.append({'month': month_name, 'total': formtmonthly_total})
         monthly_totals.append({'month': month_name, 'total': monthly_total})
+
 
 
     def set_quarter(quarter, year):
@@ -599,15 +606,18 @@ def statistics(request):
         quarterly_total = Receipt.objects.filter(
             recept_date__range=[quarter_start, quarter_end]
         ).aggregate(Sum('payment_amout'))['payment_amout__sum'] or 0
-        quarterly_totals.append({'quarter': quarter_name, 'total': quarterly_total})
+        formatquarterly_total = format_currency(quarterly_total)
+        quarterly_totals.append({'quarter': quarter_name, 'total': formatquarterly_total})
         # 近三年每年数据
 
-
+    formatyearly_totals = []
     yearly_totals = []
     for year in range(current_year, current_year-3,-1):
         yearly_total = Receipt.objects.filter(recept_date__year=year).aggregate(
            Sum('payment_amout'))['payment_amout__sum'] or 0
+        formatyearly_total = format_currency(yearly_total)
         yearly_totals.append({'year': year, 'total': yearly_total})
+        formatyearly_totals.append({'year': year, 'total': formatyearly_total})
 
         # 近一周每天数据
     daily_totals = []
@@ -616,7 +626,8 @@ def statistics(request):
         daily_total = Receipt.objects.filter(recept_date=date).aggregate(
             Sum('payment_amout'))['payment_amout__sum'] or 0
         weekdate = calendar.day_abbr[date.weekday()]
-        daily_totals.append({'date': weekdate, 'total': daily_total})
+        formatdaily_total = format_currency(daily_total)
+        daily_totals.append({'date': weekdate, 'total': formatdaily_total})
 
         # 今年总订单数
     year_totalcount = Customerorder.objects.filter(cancled =False,paid=True, order_date__year=current_year).count()
@@ -643,23 +654,25 @@ def statistics(request):
 
     # 将结果传递给模板
     context = {
-        'year_total': year_total,
-        'quarter_total': quarter_total,
-        'month_total': month_total,
-        'day_total': day_total,
+        'year_total': format_currency(year_total),
+        'quarter_total': format_currency(quarter_total),
+        'month_total': format_currency(month_total),
+        'day_total': format_currency(day_total),
         'year_totalcount': year_totalcount,
         'month_totalcount': month_totalcount,
         'day_totalcount': day_totalcount,
         'monthly_totals': monthly_totals,
         'quarterly_totals': quarterly_totals,
         'yearly_totals': yearly_totals,
+        'formatyearly_totals':formatyearly_totals,
+        'formtmonthly_totals':formtmonthly_totals,
         'daily_totals': daily_totals,
         'top_yearly_foods': top_yearly_foods,
         'bottom_yearly_foods': bottom_yearly_foods,
         'top_monthly_foods': top_monthly_foods,
         'bottom_monthly_foods': bottom_monthly_foods,
     }
-    print(context)
+    #print(context)
     return render(request, 'statistics.html', context)
 
 

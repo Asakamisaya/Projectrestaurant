@@ -242,7 +242,8 @@
                         <tbody>
 
 
-                         {% for item in top_monthly_foods %}
+                        {% if top_monthly_foods %}
+                        {% for item in top_monthly_foods %}
                         <tr>
                             <th scope="row">{{forloop.counter}}</th>
                             <td>{{ item.foodname }}</td>
@@ -250,6 +251,14 @@
 
                         </tr>
                     {% endfor %}
+                                                    {% else %}
+                            <tr>
+                            <th scope="row"></th>
+                            <td>N/A</td>
+                            <td></td>
+
+                        </tr>
+                        {% endif %}
 
 
 
@@ -303,7 +312,7 @@
                         </thead>
                         <tbody>
 
-
+                        {% if bottom_monthly_foods  %}
                         {% for item in bottom_monthly_foods  %}
                         <tr>
                             <th scope="row">{{forloop.counter}}</th>
@@ -312,6 +321,14 @@
 
                         </tr>
                     {% endfor %}
+                            {% else %}
+                            <tr>
+                            <th scope="row"></th>
+                            <td>N/A</td>
+                            <td></td>
+
+                        </tr>
+                        {% endif %}
 
 
 
@@ -339,7 +356,7 @@
     case 'Now':
         newyearSaleAmount = 'THB {{ year_total }}';
         break;
-         {% for item in yearly_totals %}
+         {% for item in formatyearly_totals %}
       case '{{ item.year }}':
         newyearSaleAmount = 'THB {{ item.total }}';
         break;
@@ -383,7 +400,7 @@
     // 根据选择的月份设置销售额
     switch (selectedmonth) {
     case 'Now':
-        newmonthSaleAmount = 'THB {{ month_total }}';
+        newmonthSaleAmount = 'THB {{ formtmonthly_totals }}';
         break;
          {% for item in monthly_totals %}
       case '{{ item.month }}':
