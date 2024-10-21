@@ -69,8 +69,10 @@ class Receipt(models.Model):
         return self.invoice
 
 
-class employee(models.Model):
-    employeename = models.CharField(verbose_name='Employee Name', max_length=50)
-    password = models.CharField(verbose_name='Password', max_length=20)
+class Entertokens(models.Model):
+    token = models.CharField(verbose_name='Employee Name', max_length=50)
+
+    def __str__(self):
+        return self.token
 
 

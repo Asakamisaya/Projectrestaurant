@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CheckOut</title>
+    <title>Checkout</title>
     <link rel="stylesheet" href="{% static 'plugins/bootstrap/css/bootstrap.css' %}">
 <style>
         .table-tile {
@@ -125,9 +125,9 @@
                               {% csrf_token %}
                               <div style="font-size:16px;padding-left:80%">Payment Method :</div>
                             <div class="form-check form-check-inline " style="padding-left:80%">
-                            <input class="form-check-input" type="radio" name="option" id="qr" value="qr">
-                            <label class="form-check-label" for="qr">QR</label>
-                            <input class="form-check-input" type="radio" name="option" id="crash" value="crash" checked>
+                            <input class="form-check-input" type="radio" name="option" id="QR" value="QR">
+                            <label class="form-check-label" for="QR">QR</label>
+                            <input class="form-check-input" type="radio" name="option" id="cash" value="cash" checked>
                             <label class="form-check-label" for="cash">Cash</label>
                             </div>
 
@@ -164,7 +164,7 @@
 <script>
 function confirmCheckout() {
     const selectedOption = document.querySelector('input[name="option"]:checked').value;
-    if (selectedOption === 'qr') {
+    if (selectedOption === 'QR') {
         window.open('/QR', '_blank'); // 在新窗口打开QR页面
     }
     return confirm('Proceed with the checkout?');

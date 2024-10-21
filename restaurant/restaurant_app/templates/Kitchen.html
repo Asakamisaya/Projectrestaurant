@@ -108,11 +108,11 @@
                                                      {% if item.finished %}
                                 <a class="btn btn-success col-md-6 dynamic-font">Finished</a>
                                 {% else %}
-                                <a class="btn btn-warning col-md-6" href="/finishitem/{{ item.table_number }}/{{ order_id }}/{{ item.logid }}" >Kooking</a>
+                                <a class="btn btn-warning col-md-6" href="/finishitem/{{ item.table_number }}/{{ order_id }}/{{ item.logid }}" >Cooking</a>
                                 {% endif %}
                                 {% else %}
 
-                                    <a class="btn btn-default col-md-6" href="/kookingitem/{{ item.table_number }}/{{ order_id }}/{{ item.logid }}">Start</a>
+                                    <a class="btn btn-default col-md-6" href="/cookingitem/{{ item.table_number }}/{{ order_id }}/{{ item.logid }}">Start</a>
                                 {% endif %}
                                 {% endif %}
 
@@ -154,7 +154,7 @@
                         <tr>
                             <th scope="row">{{forloop.counter}}</th>
                             <td>{{ item.foodname }}</td>
-                            <td>Speecial request: {{ item.Srequest }}</td>
+                            <td>Special Requirement: {{ item.Srequest }}</td>
 
 
                         </tr>

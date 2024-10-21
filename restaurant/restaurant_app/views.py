@@ -6,6 +6,7 @@ from idlelib.rpc import request_queue
 from importlib.resources import files
 from itertools import filterfalse
 from lib2to3.fixes.fix_input import context
+from sys import int_info
 from tabnanny import check
 from turtle import TurtleGraphicsError
 
@@ -17,9 +18,10 @@ from django.db.models import Max
 from django.shortcuts import render, redirect
 from django import forms
 from django.http import HttpResponse
+from requests import Request
 from rest_framework.templatetags.rest_framework import items
 
-from .models import Foodmenu,Foodcategory,Customerorder,Receipt
+from .models import Foodmenu,Foodcategory,Customerorder,Receipt,Entertokens
 from .serializers import FoodmenuSerializer
 from restaurant_app import models
 from rest_framework import viewsets, mixins
@@ -36,6 +38,33 @@ import calendar
 # Create your views here.
 def QR(request):
     return render(request, 'QR.html')
+
+
+
+def Token(request):
+    if request.method == 'GET':
+            Token = TokenForm()
+            return render(request,'token.html',{'Token':Token})
+
+    if request.method == 'POST':
+        form = TokenForm(request.POST)
+
+        if form.is_valid():
+            token_value = form.cleaned_data.get('Token')
+            Tokeninfo = Entertokens.objects.filter(token=token_value).first()
+            if Tokeninfo:
+                print("OK")
+                request.session['Token'] = token_value
+                info = request.session.get("Token")
+                print(info)
+                return redirect('/')
+            else:
+                return HttpResponse("""
+                                        <script>
+                                            alert('Invalid Token, please try again!');
+                                            window.location.href = '/Token';
+                                        </script>
+                                    """)
 
 def curretorder(request,nid):
     orders = Customerorder.objects.filter(paid=False,table_number=nid)
@@ -316,7 +345,7 @@ def ordermenu(request,nid):
     queryset = models.Foodmenu.objects.filter(deleted=False)
     grouped_data = {}
     for item in queryset:
-        catename = item.catename
+        catename = item.catename.catename if item.catename else 'Others'
         if catename not in grouped_data:
             grouped_data[catename] = []
         grouped_data[catename].append(item)
@@ -387,6 +416,8 @@ def removeditems(request):
     return render(request,'RecycleBin.html',{'queryset':queryset})
 
 
+class TokenForm(forms.Form):
+    Token = forms.CharField(max_length=200,label="Token")
 
 class Srequestform(forms.Form):
     srequest = forms.CharField(max_length=200,label="special request")
@@ -421,6 +452,13 @@ class edititemform(forms.ModelForm):
         for name, field in self.fields.items():
             field.widget.attrs = {"class": "form-control","placeholder": field.label}
 
+
+
+def deletecatagory(request,cataneme):
+    getcata = models.Foodcategory.objects.filter(catename=cataneme).first()
+    if getcata:
+        getcata.delete()
+    return redirect('/')
 
 
 def addcatagory(request):

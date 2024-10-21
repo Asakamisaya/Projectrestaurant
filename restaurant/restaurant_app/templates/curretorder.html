@@ -92,7 +92,7 @@
                                                      {% if item.finished %}
                                 <a class="btn btn-success col-md-6 dynamic-font">Finished</a>
                                 {% else %}
-                                <a class="btn btn-warning col-md-6" >Kooking</a>
+                                <a class="btn btn-warning col-md-6" >Cooking</a>
                                 {% endif %}
                                 {% else %}
 
@@ -122,7 +122,7 @@
                                 {% if not item.cooking %}
                                     <a class="btn btn-default col-md-6" href="/customercancleitem/{{ item.table_number }}/{{ order_id }}/{{ item.logid }} "onclick="if(!confirm('Cancel Order?')) { event.preventDefault(); }">Cancel</a>
                                     {% else %}
-                                    <a class="btn btn-danger col-md-6" onclick="if(!confirm('Can not cancel,it already on kooking!')) { event.preventDefault(); }">Cancel</a>
+                                    <a class="btn btn-danger col-md-6" onclick="if(!confirm('Can not cancel,it already on cooking!')) { event.preventDefault(); }">Cancel</a>
                                     {% endif %}
                                 {% else %}
                                 {% endif %}

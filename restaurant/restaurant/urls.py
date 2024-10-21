@@ -22,7 +22,7 @@ from django.views.static import serve
 
 from rest_framework import routers
 router = routers.DefaultRouter()
-from restaurant_app.views import ordermenu, menulist, addtomenu, addcatagory, edititem, removeitem, removeditems, retrieveitem ,deleteitems,submitorder,soldoutitem,removedsoldout,kitchen,cancleitem,Ocancleitem,kookingitem,finishitem,Checkout,curretorder,customercancleitem,Orders,statistics,statistics2,srequest,pullReceipt,QR
+from restaurant_app.views import ordermenu, menulist, addtomenu, addcatagory,deletecatagory, edititem, removeitem, removeditems, retrieveitem ,deleteitems,submitorder,soldoutitem,removedsoldout,kitchen,cancleitem,Ocancleitem,kookingitem,finishitem,Checkout,curretorder,customercancleitem,Orders,statistics,statistics2,srequest,pullReceipt,QR,Token
 
 
 
@@ -33,6 +33,8 @@ urlpatterns = [
     path('Order/<int:nid>/', ordermenu),
     path('Order/<int:nid>/submitorder/', submitorder),
     path('Order/<int:nid>/curretorder/', curretorder),
+    path('customercancleitem/<str:table_number>/<str:order_id>/<str:logid>', customercancleitem),
+    path('Srequest/<str:table_number>/<str:order_id>/<str:logid>', srequest),
 
 
 
@@ -41,10 +43,9 @@ urlpatterns = [
     path('cancleitem/<str:table_number>/<str:order_id>/<str:logid>',cancleitem),
     path('Ocancleitem/<str:table_number>/<str:order_id>/<str:logid>',Ocancleitem),
 
-    path('customercancleitem/<str:table_number>/<str:order_id>/<str:logid>', customercancleitem),
-    path('Srequest/<str:table_number>/<str:order_id>/<str:logid>', srequest),
 
-    path('kookingitem/<str:table_number>/<str:order_id>/<str:logid>',kookingitem),
+
+    path('cookingitem/<str:table_number>/<str:order_id>/<str:logid>',kookingitem),
     path('finishitem/<str:table_number>/<str:order_id>/<str:logid>', finishitem),
 
     path('checkout/<str:order_id>/', Checkout),
@@ -54,7 +55,8 @@ urlpatterns = [
     path('', menulist),
     path('menuadmin/', menulist),
     path('additem/', addtomenu),
-    path('addcatagory/', addcatagory),
+    path('deletecatagory/<str:cataneme>', deletecatagory),
+    path('edititem/', edititem),
     path('edititem/<int:nid>/', edititem),
     path('removeditems/', removeditems),
     path('removeitem/<int:nid>/', removeitem),
@@ -66,6 +68,7 @@ urlpatterns = [
     path('Statistics2/', statistics2),
     path('Statistics2/set-dates/', statistics2),
     path('QR/', QR),
+    path('Token/',Token),
 
 
     url('/', include(router.urls)),

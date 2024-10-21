@@ -66,7 +66,7 @@ background-size:cover;
     <div class="panel panel-default">
 <div class="panel-heading" style="height: 60px">
         <div class="btn-group pull-right">
-         <a class="btn btn-default" href="addcatagory">Add Catagory</a>
+         <a class="btn btn-default" href="addcatagory">Add Category</a>
         <a class="btn btn-success" href="additem">Add New</a>
         <a class="btn btn-info" href="removeditems">Removed Items</a>
     </div>
@@ -87,9 +87,11 @@ background-size:cover;
 
 
             <div class="panel panel-default">
-    <div class="panel-heading">{{ catename }}</div>
+                <div class="panel-heading" style="height: 60px;font-size: 18px;">
+                    <a class="btn btn-default">-</a>  {{ catename }}
+        <a class="btn btn-default pull-right" onclick="if(!confirm('Are you sure you want to permanently delete this category? Warning! This will reset the related category entries to null.')) { event.preventDefault(); }" href="deletecatagory/{{ catename }}">Delete Category</a></div>
      <div class="panel-body">
-      <table class="table" style="font-size: 20px;">
+      <table class="table" style="font-size: 18px;">
 
             <thead>
           <tr>
@@ -108,7 +110,7 @@ background-size:cover;
           <tr>
             <th scope="row">{{forloop.counter}}</th>
             <td class="itemsname">{{ item.foodname }}</td>
-            <td>{{ item.description }}</td>
+            <td style="word-wrap: break-word; white-space: normal;">{{ item.description }}</td>
             <td>{{ item.price }}</td>
             <td>
             <div class="zoomImage">
@@ -150,7 +152,19 @@ background-size:cover;
 <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
 <script src="{% static 'plugins/bootstrap/js/bootstrap.js' %}"></script>
 
-
+<script>
+    $(document).ready(function() {
+        $('a.btn.btn-default').on('click', function() {
+            var panelBody = $(this).closest('.panel').find('.panel-body');
+            panelBody.toggle();
+            if ($(this).text() === '-') {
+                $(this).text('+');
+            } else {
+                $(this).text('-');
+            }
+        });
+    });
+</script>
 <script>
     $(document).ready(function() {
         $('#searchInput').on('keyup', function() {
