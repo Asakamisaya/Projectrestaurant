@@ -70,9 +70,9 @@ class Receipt(models.Model):
 
 
 class Entertokens(models.Model):
-    token = models.CharField(verbose_name='Employee Name', max_length=50)
+    token = models.CharField(verbose_name='Token', max_length=50)
 
     def __str__(self):
-        return self.token
+        return f"Token - {self.pk}"
 
 
