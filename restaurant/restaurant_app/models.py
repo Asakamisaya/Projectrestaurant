@@ -34,7 +34,7 @@ class Customerorder(models.Model):
     food = models.CharField(verbose_name='Food_ID', max_length=5)
     foodname = models.CharField(verbose_name='Food_Name', max_length=50,default=None)
     price = models.DecimalField(verbose_name='Price', max_digits=10, decimal_places=2, default=None)
-    Srequest = models.CharField(verbose_name='special request', max_length=200,default=None,null=True, blank=True)
+    Srequest = models.CharField(verbose_name='Special Requirement ', max_length=200,default=None,null=True, blank=True)
     order_date = models.DateField(verbose_name='Order_Date')
     quantity = models.IntegerField(verbose_name='Quantity')
     cancled =  models.BooleanField(default=False)

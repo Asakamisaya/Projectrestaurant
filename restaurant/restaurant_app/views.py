@@ -420,7 +420,7 @@ class TokenForm(forms.Form):
     Token = forms.CharField(max_length=200,label="Token")
 
 class Srequestform(forms.Form):
-    srequest = forms.CharField(max_length=200,label="special request")
+    srequest = forms.CharField(max_length=200,label="Special Requirement ")
 
 class addcatagoryform(forms.ModelForm):
     class Meta:
