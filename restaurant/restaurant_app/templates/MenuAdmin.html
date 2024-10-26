@@ -88,7 +88,7 @@ background-size:cover;
 
             <div class="panel panel-default">
                 <div class="panel-heading" style="height: 60px;font-size: 18px;">
-                    <a class="btn btn-default">-</a>  {{ catename }}
+                    <a class="btn btn-default toggle-category">-</a>  {{ catename }}
         <a class="btn btn-default pull-right" onclick="if(!confirm('Are you sure you want to permanently delete this category? Warning! This will reset the related category entries to null.')) { event.preventDefault(); }" href="deletecatagory/{{ catename }}">Delete Category</a></div>
      <div class="panel-body">
       <table class="table" style="font-size: 18px;">
@@ -154,7 +154,7 @@ background-size:cover;
 
 <script>
     $(document).ready(function() {
-        $('a.btn.btn-default').on('click', function() {
+        $('a.toggle-category').on('click', function() {
             var panelBody = $(this).closest('.panel').find('.panel-body');
             panelBody.toggle();
             if ($(this).text() === '-') {

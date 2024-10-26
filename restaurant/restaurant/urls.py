@@ -55,6 +55,7 @@ urlpatterns = [
     path('', menulist),
     path('menuadmin/', menulist),
     path('additem/', addtomenu),
+    path('addcatagory/', addcatagory),
     path('deletecatagory/<str:cataneme>', deletecatagory),
     path('edititem/', edititem),
     path('edititem/<int:nid>/', edititem),
