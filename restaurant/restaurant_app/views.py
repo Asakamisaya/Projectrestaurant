@@ -21,7 +21,7 @@ from django.http import HttpResponse
 from requests import Request
 from rest_framework.templatetags.rest_framework import items
 
-from .models import Foodmenu,Foodcategory,Customerorder,Receipt,Entertokens
+from .models import Foodmenu,Foodcategory,Customerorder,Receipt,Passwords
 from .serializers import FoodmenuSerializer
 from restaurant_app import models
 from rest_framework import viewsets, mixins
@@ -51,7 +51,7 @@ def Token(request):
 
         if form.is_valid():
             token_value = form.cleaned_data.get('Token')
-            Tokeninfo = Entertokens.objects.filter(token=token_value).first()
+            Tokeninfo = Passwords.objects.filter(token=token_value).first()
             if Tokeninfo:
                 print("OK")
                 request.session['Token'] = token_value
@@ -417,7 +417,7 @@ def removeditems(request):
 
 
 class TokenForm(forms.Form):
-    Token = forms.CharField(max_length=200,label="Token")
+    Token = forms.CharField(max_length=200,label="Password",widget=forms.PasswordInput)
 
 class Srequestform(forms.Form):
     srequest = forms.CharField(max_length=200,label="Special Requirement ")

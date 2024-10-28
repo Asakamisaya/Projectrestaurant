@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Foodmenu, Customerorder, Foodcategory, Receipt, Foodcategory, Entertokens
+from .models import Foodmenu, Customerorder, Foodcategory, Receipt, Foodcategory, Passwords
 
 
 class foofmenuadmin(admin.ModelAdmin):
@@ -16,7 +16,7 @@ class Foodcategoryadmin(admin.ModelAdmin):
 class Receiptadmin(admin.ModelAdmin):
     list_display = ('receipt_id', 'invoice', 'order', 'payment_method' ,'payment_amout' ,'recept_date')
 
-class Tokenadmin(admin.ModelAdmin):
+class Passwordsadmin(admin.ModelAdmin):
     list_display = ('Token')
 
 # Register your models here.
@@ -24,4 +24,4 @@ admin.site.register(Foodmenu)
 admin.site.register(Customerorder)
 admin.site.register(Foodcategory)
 admin.site.register(Receipt)
-admin.site.register(Entertokens)
+admin.site.register(Passwords)

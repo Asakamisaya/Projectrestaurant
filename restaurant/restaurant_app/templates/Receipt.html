@@ -30,6 +30,26 @@
             border-bottom: 1px solid #ddd;
         }
 
+
+    @media print {
+        /* Hide the print button */
+        .print-button {
+            display: none;
+        }
+
+
+        .print-container {
+            width: 400px !important;
+            margin: 0 auto;
+        }
+
+
+        body {
+            margin: 0;
+            padding: 0;
+            -webkit-print-color-adjust: exact; /* Ensures colors render correctly */
+        }
+    }
 </style>
 </head>
 <body>
@@ -88,10 +108,21 @@
     <br><br><br>
 {% endfor %}
 
-
+ <button class="btn btn-primary print-button" onclick="printPage()">Print Receipt</button>
 </div>
 
 
+
+
+
+<!-- Print Function -->
+<script>
+    function printPage() {
+        window.print();
+    }
+
+
+</script>
 
 
 

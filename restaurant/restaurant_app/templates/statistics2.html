@@ -82,7 +82,7 @@
           <li><a href="/OrdersBoard/">OrdersBoard</a></li>
 
           <li class="dropdown">
-          <a href="/Statistics/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Statistics <span class="caret"></span></a>
+          <a href="/Statistics/" class="dropdown-toggle active" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Statistics <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li ><a href="/Statistics/">Dashboard</a></li>
             <li class="active"><a href="/Statistics2/">Demand Report</a></li>
@@ -158,7 +158,7 @@
 
 <!-- 添加更多行 -->
 
-                   <div class="container" style="width: 90%;height: ">
+                   <div class="container" style="width: 90%;">
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4>Record</h4>
@@ -167,6 +167,7 @@
                <table class="table table-striped table-bordered">
         <thead>
             <tr>
+                <th>#</th>
                 <th>Invoice</th>
                 <th>Receipt Date</th>
                 <th>Receipt Time</th>
@@ -177,6 +178,8 @@
         <tbody>
             {% for receipt in receipts %}
             <tr>
+                <td>{{ forloop.counter }}
+                </td>
                 <td>{{ receipt.invoice }}</td>
                 <td>{{ receipt.recept_date|date:"Y-m-d" }}</td>
                 <td>{{ receipt.recept_time|time:"H:i:s" }}</td>
